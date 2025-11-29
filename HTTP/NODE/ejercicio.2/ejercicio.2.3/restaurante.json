@@ -1,0 +1,21 @@
+{
+    "platos":[
+        {
+            "Ensalada César": {
+                "precio": 9.50,
+                "aptoVegetarianos": true,
+                "alergenos": []
+            },
+            "Hamburguesa Clásica":{
+                "precio": 11.00,
+                "aptoVegetarianos": false,
+                "alergenos": ["gluten"]
+            },
+            "Tarta de Queso":{
+                "precio": 5.00,
+                "aptoVegetarianos": false,
+                "alergenos": ["lácteos"]
+             }
+        }
+    ]
+}

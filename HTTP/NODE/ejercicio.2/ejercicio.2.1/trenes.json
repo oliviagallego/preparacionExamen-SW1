@@ -1,0 +1,22 @@
+{
+    "trenes":[
+        {
+            "tren": "ALVIA",
+            "codigo": "1234",
+            "origen":"Madrid",
+            "destino": "Barcelona",
+            "paradas":[
+                "Zaragoza", "Lleida"
+            ],
+            "horario":[ "08:00", "16:00"]
+        },
+         {
+            "tren": "ALVIA",
+            "codigo": "5678",
+            "origen":"Madrid",
+            "destino": "Valencia",
+            "paradas":"Cuenca",
+            "horaSalida": "09:30"
+        }
+    ]
+}

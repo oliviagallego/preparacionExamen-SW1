@@ -1,0 +1,33 @@
+{
+    "asignaturas":[
+        {
+            "nombre": "Sistemas Web I",
+            "grupos":[
+                {
+                    " A": {
+                        "dia": "Lunes",
+                        "horario": "10:00-12:00",
+                        "aula": 101
+                    },
+                    " B": {
+                        "dia": "Miércoles",
+                        "horario": "12:00-14:00",
+                        "aula": 203
+                    }
+                }
+            ]
+        },
+         {
+            "nombre": "Técnicas de Imagen",
+            "grupos":[{
+                "Unico" : {
+                    "dia": "Jueves",
+                    "horario": "09:00-11:00",
+                    "aula": 305
+                }
+            }
+            ]
+        }
+    ],
+    "grado": "Ingeniería Biomédica"
+}

@@ -1,0 +1,7 @@
+{
+    "PORT":3000,
+    "Memory": true,
+    "CPU":true,
+    "NodeUpTime": true,
+    "intervalSeconds":5
+}
