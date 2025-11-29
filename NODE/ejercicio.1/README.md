@@ -1,4 +1,4 @@
-#Ejercicio 1
+# Ejercicio 1
 
 - Crea un servidor en node.js
 - Que al iniciar muestre por consola información del sistema y versión de node.js
