@@ -15,25 +15,27 @@ function getRandomPassword(numbWords){
 }
 
 
-const server = http.createServer((req,res)=>{
-    if (req.method === 'GET' && req.url.startsWith('/')){
-        const fullUrl = new URL (req.url, `http://${req.headers.host}`);
-        const xParm = fullUrl.searchParams.get('x');
-        let numWords= pardeInt (xParam,10);
-        if (isNaN (numWords) || numWords <=0){
-            numword = 3;
-    }
-    const password= getRandomPassword(numWords);
+const server = http.createServer((req, res) => {
+  if (req.method === 'GET' && req.url.startsWith('/')) {
+    const fullUrl = new URL(req.url, `http://${req.headers.host}`);
+    const xParam = fullUrl.searchParams.get('x');
 
-    res.statusCode=200;
+    let numWords = parseInt(xParam, 10);
+    if (isNaN(numWords) || numWords <= 0) {
+      numWords = 3;
+    }
+
+    const password = getRandomPassword(numWords);
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.end(`Tu contraseña aleatoria es: ${password}\n`);
+
+  } else {
+    res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');
-    res.end('Tu contraseña aleatoria es: ${password}\n');
-
-    }else{
-        res.statusCode= 404;
-        res.setHeader('Content-Type', 'text/plain');
-        res.end('Not Found\n');
-    }
+    res.end('Not Found\n');
+  }
 });
 
 const PORT= config.PORT ||3000;
