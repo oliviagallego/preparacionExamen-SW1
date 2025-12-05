@@ -1,0 +1,5 @@
+{
+    "PORT": 3000,
+    "intervalo_ms": 10000,
+    "scapeURL": "https://www.booking.com/index.es.html"
+}

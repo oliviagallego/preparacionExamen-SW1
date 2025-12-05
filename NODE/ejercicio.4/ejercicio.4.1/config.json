@@ -1,0 +1,5 @@
+{
+    "PORT": 3000,
+    "intervalo_ms":1000,
+    "scaperingUrl": "https://elpais.com"
+}

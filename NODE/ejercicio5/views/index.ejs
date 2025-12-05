@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <h1> <%= title %></h1>
+    <p>Ejemplo de listas</p>
+
+    <ul>
+      <% items.forEach(function(item) { %>
+        <li>
+          <strong><%= item.nombre %></strong>
+          <%= item.descripcion %>
+        </li>
+      <% }) %>
+    </ul>
+
+    <p>
+      <a href="/login">
+        <button>Login</button>
+      </a>
+    </p>
+  </body>
+</html>

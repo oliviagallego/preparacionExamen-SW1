@@ -24,4 +24,5 @@ Además hacer esto en papel sería demasiado largo y muy dependiente de probarlo
 
 #### Comienzo del ejercicio por consola:
 npm init -y          --> crea package.json rápido
+
 npm install cheerio  --> para manipular HTML
