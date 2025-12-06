@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> <%= title %> </title>
+        <link rel= 'stylesheet' href="/stylesheets/sheet.css">
+    </head>
+    <body>
+        <h1> <%= title %> </h1>
+        <p> Esto es una muestra de peliculas</p>
+        <ul>
+            <% products.forEach(function(product){ %>
+                <li>
+                    <strong> Pelicula: </strong> <%= product.name %> <br> 
+                    <span> ID: </span> <%= product.id %> <br>
+                    <span> Precio: </span> <%= product.precio %> <br>
+                    <span> Descripcion: </span> <%= product.descripcion %> <br>
+
+                    <!-- enlace a la página de detalle -->
+                    <a href="/product/<%= product.id %>">Ver detalle</a>
+                </li>
+            <%}); %>
+        </ul>
+    </body>
+</html>

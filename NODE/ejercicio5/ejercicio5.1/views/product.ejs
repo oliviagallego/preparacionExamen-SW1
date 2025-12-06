@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> <%= title %> </title>
+        <link rel="stylesheet" href="/stylesheets/style.css" >
+    </head>
+    <body>
+        <h1> <%=product.name%> </h1>
+        <span>ID:</span> <%= product.id %>
+        <span>Description:</span> <%= product.descripcion %>
+        <span>Precio:</span> <%= product.precio %>
+
+        <p> <a href="/"> Volver al catalogo </a> </p>
+
+        <h2>Deja un comentario: </h2>
+        <form action="/product/<%= product.id %>/comment" method="post">
+            <label> Nombre: <input type="text" name="nombre"> </label> <br>
+            <label> Comentario: <br>
+                <textarea name="comentario"></textarea>
+            </label> <br>
+            <button type="submit"> Enviar </button>
+        </form>
+    </body>
+</html>
