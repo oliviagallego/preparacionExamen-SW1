@@ -1,4 +1,3 @@
-Perfecto, vamos a por **otro examen completo** distinto al anterior 💪
 # SISTEMAS WEB I – EXAMEN (SIMULACRO 2)
 
 **Duración:** 2 horas
