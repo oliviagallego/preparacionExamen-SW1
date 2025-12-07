@@ -396,7 +396,7 @@ Porque “rechazar” aquí significa **no dar consentimiento a las cookies**, a
 Además, el enunciado solo pide redirigir fuera (Wikipedia), no seguir usando la aplicación ni recordar su decisión.
 
 
-## 🧩 Apartado 5 – JSON y `package.json` (1,5 pt)
+## Apartado 5 – JSON y `package.json` (1,5 pt)
 
 ### 5.1. Corrección JSON
 
