@@ -434,7 +434,6 @@ JSON dado:
 2. Clave `seats` sin comillas → en JSON todas las claves deben ir entre comillas: `"seats"`.
 3. Coma sobrante después del último campo `"online": true,` → tampoco se permiten comas finales en objetos.
 
----
 
 ### 5.2. `scripts` en `package.json`
 
@@ -448,7 +447,7 @@ Con eso, `npm start` ejecuta `node ./bin/www`.
 
 
 
-## 🧩 Apartado 6 – Socket.io BONUS (0,5 pt)
+## Apartado 6 – Socket.io BONUS (0,5 pt)
 
 ### 6.1. Línea que falta en el servidor
 
