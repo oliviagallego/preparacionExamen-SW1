@@ -6,7 +6,7 @@
 
 ## 0. Contexto general
 
-Estamos desarrollando una aplicación llamada **CinePlus**, una pequeña web para gestionar **cartelera de cine** y **usuarios**.
+Estamos desarrollando una aplicación llamada **CinePlus**, una pequeña web para gestionar la **cartelera de cine** y los **usuarios**.
 
 Estructura del proyecto:
 
@@ -102,74 +102,19 @@ app.use(function(req, res, next) {
 module.exports = app;
 ```
 
+Completa los apartados que se indican a continuación.
+
+
 ## 1. Configuración de Express, vistas y variables globales (2 puntos)
 
-### 1.1. Configuración de vistas y middlewares básicos (1 punto)
+1.1. En `app.js`, completa los **TODO (1)** y **(2)** para dejar configuradas las vistas (carpeta y motor de plantillas) y los middlewares básicos de la aplicación (parseo de JSON, formularios, cookies y ficheros estáticos).
 
-Rellena los **TODO (1)** y **TODO (2)** de `app.js`:
+1.2. En el **TODO (3)** de `app.js`, añade un middleware que deje disponible el usuario actual en las vistas mediante `res.locals.currentUser`.
 
-1. Configura las vistas para que:
-
-   * la carpeta de vistas sea `views` dentro del directorio actual,
-   * el motor de plantillas sea **EJS**.
-2. Añade los middlewares básicos en este orden razonable:
-
-   * `express.json()`
-   * `express.urlencoded({ extended: false })`
-   * `cookieParser()`
-   * `express.static(path.join(__dirname, 'public'))`
-
-Escribe el código que añadirías en `app.js` en esas zonas marcadas como TODO.
+1.3. En el **TODO (4)** de `app.js`, define variables globales accesibles en todas las vistas para el nombre y el eslogan del sitio (`siteName`, `tagline`), y modifica la plantilla `views/layout.ejs` para que use esas variables en el `<title>` y en el encabezado principal en lugar de tener el texto escrito directamente.
 
 
-### 1.2. Usuario actual en `res.locals` (0,5 puntos)
-
-Completa el **TODO (3)**:
-
-* Define un middleware que:
-
-  * lea `req.session.user` (si existe),
-  * lo guarde en `res.locals.currentUser`,
-  * llame a `next()`.
-
-Escribe el código del middleware y el `app.use` correspondiente.
-
-
-### 1.3. `app.locals.siteName` y `tagline` (0,5 puntos)
-
-Completa el **TODO (4)**:
-
-* Crea dos variables globales accesibles en todas las vistas:
-
-  * `siteName = "CinePlus"`
-  * `tagline = "Tu cine de confianza online"`
-
-* a- Escribe las líneas que añadirías en `app.js`.
-* b- Modifica este fragmento de `views/layout.ejs` para que no tenga el texto “a pelo”:
-
-```ejs
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8">
-    <title>CinePlus - Tu cine de confianza online</title>
-    <link rel="stylesheet" href="/styles.css">
-  </head>
-  <body>
-    <header>
-      <h1>CinePlus - Tu cine de confianza online</h1>
-    </header>
-    <main>
-      <%- body %>
-    </main>
-  </body>
-</html>
-```
-
-Usa `siteName` y `tagline` en el `<title>` y en el `<h1>`.
-
-
-## 2. Login, logout y middleware de autenticación + roles (3 puntos)
+## 2. Login, logout y middlewares de autenticación y roles (3 puntos)
 
 Fichero `routes/auth.js` (incompleto):
 
@@ -193,77 +138,21 @@ router.get('/login', function(req, res) {
 module.exports = router;
 ```
 
-### 2.1. Implementar `POST /auth/login` (1,5 puntos)
+2.1. Implementa la ruta `POST /auth/login` para gestionar el formulario de login usando los usuarios definidos en `database.js`, guardando el usuario en sesión cuando las credenciales sean correctas y redirigiendo a la cartelera de películas.
 
-Completa la ruta:
+2.2. Implementa la ruta `POST /auth/logout` para cerrar la sesión del usuario y devolverlo a la página de inicio.
 
-* Recibe `username` y `password` desde `req.body`.
-* Comprueba si existe un usuario `db.users.data[username]`.
-* Verifica que la contraseña coincide.
-* Si las credenciales son correctas:
+2.3. En `routes/admin.js`, define y aplica dos middlewares:
 
-  * guarda el usuario completo en `req.session.user`,
-  * redirige a `/movies` (suponemos que esa ruta existe en `index.js`).
-* Si las credenciales son incorrectas:
+* uno para comprobar que el usuario está autenticado antes de acceder a `/admin`,
+* otro para comprobar que el usuario autenticado tiene rol de administrador.
 
-  * vuelve a renderizar `login.ejs` con:
-
-    * `title: 'Iniciar sesión'`
-    * `error: 'Usuario o contraseña incorrectos'`
-
-Escribe el código completo de esa ruta.
-
-
-### 2.2. Implementar `POST /auth/logout` (0,5 puntos)
-
-Completa la ruta:
-
-* Destruye la sesión (o elimina `req.session.user`),
-* Redirige al usuario a la página de inicio `/`.
-
-
-### 2.3. Middleware `requireAuth` y `requireAdmin` (1 punto)
-
-En `routes/admin.js`:
-
-```js
-var express = require('express');
-var router = express.Router();
-var db = require('../database');
-
-// TODO: importar/definir middlewares
-
-router.get('/users', function(req, res) {
-  const users = db.users.data;
-  res.render('admin_users', { title: 'Administrar usuarios', users: users });
-});
-
-module.exports = router;
-```
-
-Define y aplica dos middlewares:
-
-1. `requireAuth(req, res, next)`:
-
-   * comprueba si `req.session.user` existe,
-   * si no existe, redirige a `/auth/login`,
-   * si existe, llama a `next()`.
-
-2. `requireAdmin(req, res, next)`:
-
-   * asume que ya hay usuario en sesión,
-   * comprueba que `req.session.user.role === "admin"`,
-   * si no es admin, responde con `res.status(403).send("Prohibido")` **o** redirige a `/`,
-   * si es admin, llama a `next()`.
-
-Haz que **todas** las rutas de `/admin` usen ambos middlewares.
+Haz que las rutas de `/admin` utilicen ambos middlewares antes de renderizar la vista de administración de usuarios.
 
 
 ## 3. EJS: recorrer arrays y objetos, condicionales (2,5 puntos)
 
-### 3.1. Listado de películas (`movies.ejs`) (1,5 puntos)
-
-En `routes/index.js` tenemos, entre otras:
+En `routes/index.js` existe una ruta que muestra las películas:
 
 ```js
 router.get('/movies', function(req, res) {
@@ -272,148 +161,36 @@ router.get('/movies', function(req, res) {
 });
 ```
 
-Sabemos que `movies` es un **array** de objetos:
+3.1. En la vista `movies.ejs`, escribe el código EJS necesario dentro de `<main>` para:
 
-```js
-[
-  { id: 1, title: "Interstellar", rating: 8.7 },
-  { id: 2, title: "Inception",    rating: 8.8 },
-  { id: 3, title: "Inside Out 2", rating: 8.4 }
-]
-```
+* mostrar el título recibido,
+* mostrar un mensaje adecuado cuando no haya películas,
+* y, en caso contrario, mostrar los datos del array `movies` en forma de tabla (ID, título y puntuación).
 
-En la vista `movies.ejs`:
-
-1. Muestra un `<h2><%= title %></h2>`.
-2. Si `movies` está vacío, muestra el texto:
-   `No hay películas disponibles.`
-3. Si **no** está vacío, muestra una tabla con columnas:
-
-   * ID
-   * Título
-   * Puntuación
-
-Escribe el fragmento de EJS que iría dentro de `<main>` para conseguir esto.
+3.2. En la vista `admin_users.ejs`, se recibe un objeto `users` con los usuarios de la base de datos. Escribe el código EJS necesario para recorrer este objeto y mostrar una tabla con las columnas **Username**, **Rol** y si el usuario ha aceptado cookies (texto “Sí” / “No” según corresponda). Explica brevemente por qué no sería correcto intentar usar directamente `users.forEach(...)` en este caso.
 
 
-### 3.2. Listado de usuarios (`admin_users.ejs`) – objeto (1 punto)
+## 4. Banner de cookies, sesión y base de datos (2 puntos)
 
-En `admin.js`, la ruta `/admin/users` pasa a la vista:
+Queremos añadir un **banner de cookies** que aparezca en la parte inferior de todas las páginas, con un texto informativo y dos botones: **Aceptar** y **Rechazar**.
 
-```js
-const users = db.users.data; // objeto
-res.render('admin_users', { title: 'Administrar usuarios', users: users });
-```
+El comportamiento deseado es:
 
-Y `users` es un **objeto**:
+* el banner solo debe mostrarse mientras el usuario **no** haya aceptado las cookies,
+* si el usuario hace login y ya había aceptado cookies en una sesión anterior (según la base de datos), tampoco debería mostrarse,
+* al aceptar, debe recordarse esta decisión tanto en la sesión como, si corresponde, en el perfil del usuario en la base de datos,
+* al rechazar, se redirigirá al usuario a una página externa.
 
-```js
-{
-  "admin": { username: "admin", role: "admin",  acceptedCookies: false },
-  "lucia": { username: "lucia", role: "user",   acceptedCookies: false },
-  "raul":  { username: "raul",  role: "user",   acceptedCookies: true }
-}
-```
+4.1. Indica la condición lógica que se debe cumplir para que el banner se muestre en la vista, usando la información disponible en la sesión y en el usuario logueado, y escribe una condición EJS aproximada que envuelva el HTML del banner.
 
-* a- Escribe el código EJS para:
+4.2. Supón que existe un router de cookies en `routes/cookies.js` y que el botón “Aceptar” envía un formulario `POST` a `/cookies/accept`. Implementa la ruta correspondiente para actualizar la sesión y, en caso de haber usuario logueado, el campo `acceptedCookies` de ese usuario en la base de datos, y redirigir a la página principal. Indica también cómo se conectaría este router en `app.js`.
 
-* Recorrer correctamente las **claves** de `users`,
-* Mostrar una tabla con columnas:
-
-  * Username
-  * Rol
-  * Cookies (texto “Sí” si `acceptedCookies` es `true`, “No” si es `false`).
-
-* b- Explica brevemente por qué **no** funciona hacer:
-
-```ejs
-<% users.forEach(function(u) { ... }) %>
-```
-
-en este caso concreto.
-
-
-## 4. Banner de cookies + sesión + base de datos (2 puntos)
-
-Queremos añadir un **banner de cookies** que:
-
-* Aparezca en la parte inferior de todas las páginas.
-* Tenga:
-
-  * un texto breve,
-  * un botón “Aceptar”,
-  * un botón “Rechazar”.
-* Se oculte cuando:
-
-  * en la sesión haya `cookiesAccepted = true`, **o**
-  * el usuario logueado tenga `acceptedCookies = true` en la base de datos.
-
-### 4.1. Condición para mostrar el banner (0,75 puntos)
-
-* a- Escribe la condición lógica (en español o pseudocódigo) que determina cuándo se **debe mostrar** el banner en la vista, utilizando:
-
-* `req.session.cookiesAccepted`
-* `req.session.user`
-* `req.session.user.acceptedCookies`
-
-* b- Escribe una condición EJS aproximada en `layout.ejs`:
-
-```ejs
-<% if ( /* condición aquí */ ) { %>
-  <!-- HTML del banner -->
-<% } %>
-```
-
-No hace falta que sea perfecta, pero debe reflejar la idea de “solo mostrar si aún no ha aceptado”.
-
-
-### 4.2. Ruta `POST /cookies/accept` (0,75 puntos)
-
-Suponemos que existe un fichero `routes/cookies.js` y que el formulario del banner es:
-
-```html
-<form method="POST" action="/cookies/accept">
-  <button type="submit">Aceptar</button>
-</form>
-```
-
-En `routes/cookies.js`:
-
-1. Importa `express` y `../database`.
-
-2. Crea un `router`.
-
-3. Implementa la ruta `POST /accept` que:
-
-   * ponga `req.session.cookiesAccepted = true;`
-
-   * si existe `req.session.user`, actualice también:
-
-     ```js
-     const username = req.session.user.username;
-     db.users.data[username].acceptedCookies = true;
-     ```
-
-   * redirija al usuario a `/`.
-
-4. Exporta el router con `module.exports = router;`.
-
-Además, muestra la línea que habría que añadir en `app.js` para usar este router.
-
-
-### 4.3. Botón “Rechazar” (0,5 puntos)
-
-Queremos que el botón “Rechazar” envíe al usuario a `https://www.imdb.com`.
-
-* a- Escribe el HTML de un botón o enlace que haga esto **sin tocar el backend**.
-* b- Explica por qué en este ejercicio **no es necesario** guardar nada en sesión o base de datos cuando el usuario rechaza las cookies.
+4.3. Escribe un ejemplo de HTML para el botón “Rechazar” que envíe al usuario a `https://www.imdb.com` sin necesidad de modificar el backend, y comenta brevemente por qué en este caso no es necesario guardar nada al rechazar las cookies.
 
 
 ## 5. JSON y `package.json` (1,5 puntos)
 
-### 5.1. Corrección de JSON (1 punto)
-
-Analiza el siguiente supuesto JSON que describe una película:
+5.1. Se proporciona el siguiente JSON que describe una película:
 
 ```json
 {
@@ -426,41 +203,16 @@ Analiza el siguiente supuesto JSON que describe una película:
 }
 ```
 
-* a-  Di si es un JSON válido o no.
-* b-  Corrígelo para que sea un JSON **completamente válido**.
-* c- Enumera al menos **tres errores concretos** que has tenido que corregir.
+Indica si es un JSON válido o no, corrígelo para que lo sea y señala al menos tres errores concretos que hayas tenido que corregir.
 
-### 5.2. Scripts de `package.json` (0,5 puntos)
-
-En `package.json` tenemos:
-
-```json
-{
-  "name": "cineplus",
-  "version": "1.0.0",
-  "main": "app.js",
-  "scripts": {
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  }
-}
-```
-
-El servidor Express se arranca desde `./bin/www`. Queremos poder lanzar la app con:
-
-```bash
-npm start
-```
-
-Escribe el contenido completo del objeto `"scripts"` para que esto funcione.
+5.2. En el fichero `package.json` de la aplicación, el servidor se arranca desde `./bin/www`. Completa la sección `"scripts"` para que se pueda lanzar el servidor con el comando `npm start`.
 
 
 ## 6. Socket.io – Notificación de nueva película (BONUS 0,5 puntos)
 
-En el servidor, usamos Socket.io para mandar a todos los clientes un aviso cuando se añade una nueva película a la cartelera.
+Se quiere usar **Socket.io** para notificar en tiempo real a todos los clientes cuando se añade una nueva película.
 
-Servidor (`socket.js` o similar):
+En el servidor se tiene algo parecido a:
 
 ```js
 io.on('connection', (socket) => {
@@ -469,13 +221,12 @@ io.on('connection', (socket) => {
   socket.join('cineplus-room');
 
   socket.on('new-movie', (movieData) => {
-    // TODO: notificar a todos los clientes de la room "cineplus-room"
-    // que se ha creado una nueva película
+    // TODO: notificar a todos los clientes de la room
   });
 });
 ```
 
-Cliente (JavaScript en el navegador):
+En el cliente:
 
 ```js
 const socket = io();
@@ -485,9 +236,9 @@ socket.on('movie-created', (movie) => {
 });
 ```
 
-* a- Escribe la línea que falta en el `TODO` del servidor para emitir el evento `'movie-created'` a **todos** los clientes que estén en la sala `"cineplus-room"`, enviando `movieData`.
+6.1. Completa el código del servidor para emitir un evento adecuado a todos los clientes conectados en la sala `"cineplus-room"` cuando se reciba un nuevo `movieData`.
 
-* b- Explica en 3–4 líneas qué ocurre desde que un administrador ejecuta en el cliente:
+6.2. Explica brevemente el flujo de comunicación completo desde que un administrador ejecuta en el cliente:
 
 ```js
 socket.emit('new-movie', { title: 'Avatar 3', rating: 8.2 });
@@ -498,4 +249,3 @@ hasta que el resto de clientes ven en consola el mensaje:
 ```txt
 Nueva película en cartelera: Avatar 3
 ```
-
