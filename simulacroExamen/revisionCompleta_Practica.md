@@ -252,6 +252,66 @@ Complete los apartados que aparecen a continuación:
 **Variación habitual**
 
 * “Si el usuario ya está logueado y entra a `/login`, rediríjale a `/`”.
+---
+### Corrección: Problema 3 — Login, logout y sesiones 
+1. ```
+const database= require("./database");
+```
+En el caso que user sea un arrary ponemos:
+```
+app.post("/login", (req, res) => {
+   const {username, password}= req.body;
+
+   
+   const user= user.find(u=> u.username===username && u.password===password);
+   
+   if(user){
+     user.lastLogin = new Date().toISOString();
+     req.session.user = {
+      username: user.username,
+      role: user.role
+     };
+     res.redirect("/");
+   }
+   return res.status(401).render.("login", {title: "Login", error: "Credenciales incorrectas"});
+});
+```
+En el caso que user sea un objeto ponemos:
+```
+app.post("/login", (req, res) => {
+   const {username, password}= req.body;
+   
+   const user= database.users[username];
+   if(user && password=== user.password){
+      user.lastLogin = new Data().toSOString();
+      
+      req.session.user={
+         username: user.username,
+         role: user.role
+      };
+      res.redirect("/");
+   }
+   return res.status(401).render.("login", {title: "Login", error: "Credenciales incorrectas"});
+});
+
+```
+
+2.```
+app.post("/logout", (req, res) =>{
+   req.session.destroy((err) =>{
+   if(err) return res.sendStatus(500);
+   res.redirect("/");
+   });
+})
+```
+
+**Variación habitual**
+```
+app.get("/login", (req, res) =>{
+   if (req.session.user) return res.redirect("/");
+  res.render("login", { title: "Login" });
+})
+```
 
 ---
 
