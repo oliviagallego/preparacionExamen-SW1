@@ -776,6 +776,7 @@ app.get("/products", (req, res) => {
    res.render("products", {title: "Productos", products: database.products});
 });
 ```
+Le pasas products: database.products para que en EJS puedas hacer un forEach y pintarlos.
 
 **Apartado 2 — Crear**
 ```
@@ -786,7 +787,11 @@ app.get("/products/new", (req, res) =>{
          valores:{name:"", price: "", stock: ""
       }});
 });
+```
+Esto solo muestra el formulario vacío.
+Pasas errors: [] (sin errores al principio) y values vacíos para rellenar inputs si lo necesitas.
 
+```
 app.post("/products", (req, res) => {
   const { name, price, stock } = req.body;
 
@@ -925,6 +930,64 @@ Complete los apartados que aparecen a continuación:
 ---
 ### Corrección: Problema 9 — Cliente JS (DOM + eventos)
 
+**Apartado 1 — Eventos**
+En el HTML:
+```
+<input id="txt" type="text">
+<button id="btn"> Cargar </button>
+<sript rc="/app.js" defer> </script>
+```
+En app.js:
+```
+const btn = document.getElementById("btn");
+const list = document.getElementById("list");
+const txt = document.getElementById("txt");
+
+// Listener 1
+btn.addEventListener("click", () => {
+  console.log("Click 1");
+});
+
+// Listener 2
+btn.addEventListener("click", () => {
+  console.log("Click 2");
+});
+
+// Añadir elemento a la lista
+btn.addEventListener("click", () => {
+  const li = document.createElement("li");
+  li.textContent = txt.value || "Elemento vacío";
+  list.appendChild(li);
+});
+```
+**Apartado 2 — Validación en cliente**
+En HTML:
+```
+<p id="msg"></p>
+```
+En app.js:
+```
+const msg = document.getElementById("msg");
+
+btn.addEventListener("click", (e) => {
+  // si está vacío, no añadimos y marcamos error
+  if (!txt.value.trim()) {
+    txt.classList.add("error");
+    msg.textContent = "El campo no puede estar vacío";
+    return;
+  }
+
+  // si está bien, quitamos error y mensaje
+  txt.classList.remove("error");
+  msg.textContent = "";
+});
+```
+CSS:
+```
+.error {
+  border: 2px solid red;
+}
+```
 ---
 
 ## Problema 10 — Fetch + async/await (más importante que Ajax)
@@ -949,15 +1012,74 @@ Complete los apartados que aparecen a continuación:
 * “Implemente `POST /api/products` leyendo JSON del body”.
 
 ---
+### Corrección: Problema 10 — Fetch + async/await 
+**Apartado 1 — Endpoint**
+```
+const database = require("./database");
 
+app.get("/api/products", (req, res) => {
+  try {
+    const raw = database.products;
+    const data = Array.isArray(raw) ? raw : Object.values(raw);
+
+    return res.json({ ok: true, data });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: "Error interno" });
+  }
+});
+```
+
+**Apartado 2 — Cliente**
+En HTML:
+```
+<ul id="products"></ul>
+<p id="error"></p>
+<script src="/app.js" defer></script>
+```
+En app.js:
+```
+const ul = document.getElementById("products");
+const pError = document.getElementById("error");
+
+async function loadProducts() {
+  try {
+    pError.textContent = "";
+    ul.innerHTML = "";
+
+    const res = await fetch("/api/products");
+
+    if (!res.ok) {
+      throw new Error("HTTP " + res.status);
+    }
+
+    const json = await res.json();
+
+    if (!json.ok) {
+      throw new Error(json.error || "Respuesta inválida");
+    }
+
+    json.data.forEach((p) => {
+      const li = document.createElement("li");
+      li.textContent = `${p.name} - ${p.price}€ (stock: ${p.stock})`;
+      ul.appendChild(li);
+    });
+  } catch (err) {
+    console.error(err);
+    pError.textContent = "Error cargando productos";
+  }
+}
+
+loadProducts();
+```
+
+---
 ## Problema 11 — Express: middleware “global” de usuario
 
 Complete:
 
 **Apartado 1 — res.locals**
 
-1. Cree un middleware que haga:
-
+1. Cree un middleware que haga: que todas las vistas tengan disponible el usuario actual, si está logueado:
    * `res.locals.currentUser = req.session.user || null;`
 2. Debe ejecutarse antes de las rutas.
 
@@ -965,6 +1087,36 @@ Complete:
 
 1. En el navbar, muestre links distintos si `currentUser` existe.
 
+---
+### Correción: Problema 11 — Express: middleware “global” de usuario
+
+**Apartado 1 — res.locals**
+```
+app.use((req, res, next) => {
+  res.locals.currentUser = (req.session && req.session.user) ? req.session.user : null;
+  next();
+});
+```
+
+**Apartado 2 — Uso en vistas**
+```
+<nav>
+  <a href="/">Inicio</a>
+
+  <% if (currentUser) { %>
+    <span>Hola, <%= currentUser.username %></span>
+    <form action="/logout" method="POST" style="display:inline;">
+      <button type="submit">Logout</button>
+    </form>
+
+    <% if (currentUser.role === "admin") { %>
+      <a href="/admin">Admin</a>
+    <% } %>
+  <% } else { %>
+    <a href="/login">Login</a>
+  <% } %>
+</nav>
+```
 ---
 
 ## Problema 12 — Variables de entorno + scripts npm
@@ -979,6 +1131,25 @@ Complete:
 
 1. Añada un script `"start"` y otro `"dev"` (por ejemplo con nodemon si se menciona).
 2. Explique brevemente qué aporta `package-lock.json` en un equipo.
+
+---
+### Correción: Problema 12 — Variables de entorno + scripts npm
+**Apartado 1 — Variables de entorno**
+```
+const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || "development";
+```
+**Apartado 2 — package.json**
+```
+{
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
+  }
+}
+```
+Explicación breve package-lock.json:
+Guarda el árbol exacto de dependencias y versiones instaladas, para que todo el equipo instale lo mismo y evitar “en mi PC funciona”.
 
 ---
 
@@ -999,7 +1170,40 @@ Complete los apartados que aparecen a continuación:
 **Variación**
 
 * “Use `path.join(__dirname, ...)` para rutas correctas”.
+---
+### Correción: Problema 13 — Node core (fs/path) + JSON fichero
 
+**Apartado 1 — Guardar**
+```
+const fs = require("fs");
+const path = require("path");
+
+function saveToFile(obj) {
+  const filePath = path.join(__dirname, "data.json");
+  fs.writeFileSync(filePath, JSON.stringify(obj, null, 2), "utf8");
+}
+```
+
+**Apartado 2 — Leer**
+
+```
+function readFromFile() {
+  const filePath = path.join(__dirname, "data.json");
+
+  try {
+    const content = fs.readFileSync(filePath, "utf8");
+    const data = JSON.parse(content);
+
+    console.log(data.name); // ejemplo: propiedad concreta
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      console.log("El fichero no existe");
+    } else {
+      console.log("Error leyendo/parsing JSON");
+    }
+  }
+}
+```
 ---
 
 ## Problema 14 — Socket.io (rooms + emit) estilo kahoot
@@ -1026,6 +1230,47 @@ Complete:
 * “Contador de usuarios conectados y broadcast al entrar/salir”.
 
 ---
+### Correción: Problema 14 — Socket.io (rooms + emit) estilo kahoot
+
+**Apartado 1 — Conexión**
+```
+io.on("connection", (socket) => {
+  socket.join("sala-x");
+});
+```
+
+**Apartado 2 — Evento**
+```
+io.on("connection", (socket) => {
+  socket.join("sala-x");
+
+  socket.on("respuesta", (data) => {
+    io.to("sala-x").emit("nueva-respuesta", {
+      usuario: data.usuario,
+      opcion: data.opcion,
+      timestamp: new Date().toISOString()
+    });
+  });
+});
+```
+
+**Variaciones**
+```
+socket.to("sala-x").emit("nueva-respuesta", {...});
+```
+```
+io.on("connection", (socket) => {
+  socket.join("sala-x");
+
+  io.to("sala-x").emit("count", io.sockets.adapter.rooms.get("sala-x")?.size || 0);
+
+  socket.on("disconnect", () => {
+    io.to("sala-x").emit("count", io.sockets.adapter.rooms.get("sala-x")?.size || 0);
+  });
+});
+```
+
+---
 
 ## Problema 15 — HTML “está bien / está mal” + buenas prácticas
 
@@ -1041,4 +1286,27 @@ Complete:
 **Apartado 2 — Accesibilidad**
 
 1. Mencione 2 buenas prácticas aplicadas al fragmento (labels, alt, headings, semántica).
+
+---
+### Correción: Problema 15 — HTML “está bien / está mal” + buenas prácticas
+
+**Apartado 1 — Errores en HTML**
+Ejemplos válidos (coges 3):
+1. <img> sin alt
+   Mal: <img src="logo.png">
+   Bien: <img src="logo.png" alt="Logo de la web">
+2. label mal enlazado
+   Mal: <label for="user">Usuario</label> pero el input no tiene id="user"
+   Bien: <input id="user" ...> + <label for="user">Usuario</label>
+3. Contraseñas con GET
+   Mal: <form method="GET"> con password
+   Bien: <form method="POST">
+
+(Otros: cosas en <head> que deberían ir en <body>, falta <meta charset>, uso excesivo de <div> cuando hay <header>, <main>, etc.)
+
+**Apartado 2 — Accesibilidad**
+- Usar label asociado con for/id en inputs.
+- alt descriptivo en imágenes.
+- Estructura semántica (<header> <main> <nav> <footer>).
+- Jerarquía correcta de headings (h1 único y ordenado).
 
