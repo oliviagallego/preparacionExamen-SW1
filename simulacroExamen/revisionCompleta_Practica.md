@@ -81,7 +81,8 @@ De momento no tenemos claro el nombre definitivo de la aplicación y ahora mismo
 
 **Apartado 1 — Nombre global en vistas**
 1.
-``` app.locals.appTitle = "Nombre definitivo";```
+``` app.locals.appTitle = "Nombre definitivo";
+```
 2. En donde aparezca el titulo en el html debemos cambiarlo por:
 ```<titule> <%= appTitle %> </title> ```
 3.
@@ -253,10 +254,10 @@ Complete los apartados que aparecen a continuación:
 
 * “Si el usuario ya está logueado y entra a `/login`, rediríjale a `/`”.
 ---
+
 ### Corrección: Problema 3 — Login, logout y sesiones 
-1. ```
-const database= require("./database");
-```
+1. ```const database= require("./database");```
+   
 En el caso que user sea un arrary ponemos:
 ```
 app.post("/login", (req, res) => {
@@ -306,13 +307,11 @@ app.post("/logout", (req, res) =>{
 ```
 
 **Variación habitual**
-```
-app.get("/login", (req, res) =>{
+``` app.get("/login", (req, res) =>{
    if (req.session.user) return res.redirect("/");
   res.render("login", { title: "Login" });
 })
 ```
-
 ---
 
 ## Problema 4 — Middlewares (checkAuth / checkAdmin) + ruta protegida
@@ -344,7 +343,52 @@ Complete los apartados que aparecen a continuación:
 
 * “Mostrar enlace ‘Admin’ en el menú solo si es admin” (condición en EJS con `currentUser`).
 * “En vez de 403, renderizar una vista `forbidden.ejs`”.
+---
 
+### Corrección: Problema 4- Middlewares (checkAuth / checkAdmin) + ruta protegida
+
+**Apartado 1 — checkAuth**
+funcion checkAuth(req, res, next){
+   if(req.session.user){
+      next();
+   }
+   return res.redirect("/login");
+}
+
+**Apartado 2 — checkAdmin**
+funcion checkAdmin (req, res, next){
+   if(req.session.user.role === "admin"){
+      next();
+   }
+   return res.status(403);
+}
+
+**Apartado 3 — /admin**
+const database = require("./database");
+
+app.get("/admin", checkAuth, checkAdmin, (req, res) => {
+  const usersArray = Object.values(database.users);
+  res.render("admin", { title: "Admin", users: usersArray });
+});
+
+
+**Variaciones típicas**
+Aplicar middleware a varias rutas: 
+``` app.use("/admin", checkAuth, checkAdmin); ```
+
+
+Hacer que currentUser esté en todas las vistas:
+```
+app.use((req, res, next) => {
+  res.locals.currentUser = req.session.user || null;
+  next();
+});
+```
+
+Si no es admin, renderizar una vista “forbidden”:
+```
+return res.status(403).render("forbidden", { title: "No autorizado" });
+```
 ---
 
 ## Problema 5 — EJS (tablas/listas + condicionales)
@@ -366,30 +410,136 @@ En una vista `admin.ejs` recibimos `users`. Complete:
 **Variación**
 
 * “Recorra un **objeto** en EJS” (clave/valor) en vez de un array.
+---
+
+### Corrección: Problema 5 — EJS (tablas/listas + condicionales)
+**Apartado 1 — Tabla**
+<table>
+<thead>
+   <tr>
+      <th>Usuario</th>
+      <th>Rol</th>
+      <th>Último acceso</th>
+   </tr>
+</thead>
+<tbody>
+   <tr>
+      <% users.forEach(user => { %>
+         <td> <=% user.username %> </td>
+         <td> <=% user.role %> </td>
+         <td> <=% user.lastLogin ? user.lastLogin : 'Nunca' %> </td>
+   </tr>
+</tbody>
+
+**Apartado 2 — Condicional de sesión**
+<% if (currentUser) { %>
+  <p>Hola, <%= currentUser.username %></p>
+<% } else { %>
+  <p>Inicia sesión</p>
+<% } %>
+
+
+**Variación**
+
+* “Recorra un **objeto** en EJS” (clave/valor) en vez de un array.
+<% Object.value(users).forEach(users => { %>
+   <div> <% user.username %> </div>
+   <div> <% user.role %> </div>
+   <div> <% user.lastLogin ? user.lastLogin : "Nunca" %> </div>
+<% }) %>
 
 ---
 
 ## Problema 6 — JSON (validar / corregir / generar)
+Dispones de una aplicación **Node.js + Express + EJS** con una “base de datos” en memoria. La estructura del proyecto es:
 
-Complete los apartados que aparecen a continuación:
+```
+miapp/
+├─ app.js
+├─ database.js
+├─ package.json
+├─ public/
+└─ views/
+```
 
+En `database.js` existe una estructura con usuarios (puede ser objeto o array según se indique en cada apartado). No se permite usar librerías externas para JSON.
+
+**Apartado 1 — JSON inválido (0,5 pt)**
+
+El profesor te entrega el siguiente fragmento diciendo que es “un JSON”.
+
+```js
+{
+  name: 'Ana',
+  "active": True,
+  "roles": ["admin", "user",],
+  "profile": {
+    "email": ana@example.com,
+    "age": 20,
+  }
+}
+```
+
+1. Explica **al menos 3 errores** respecto al formato JSON (no JavaScript).
+2. Escribe debajo la **versión corregida y válida** del JSON.
+
+> Nota: Recuerda que JSON tiene reglas estrictas (comillas, booleanos, comas finales, strings…).
+
+**Apartado 2 — Construcción de JSON (0,5 pt)**
+
+A partir del siguiente texto, escribe un **JSON válido** que lo represente:
+
+> “El usuario **maria** tiene id **7** y está activo.
+> Tiene **dos roles** (en este orden): `user`, `editor`.
+> Sus permisos por módulo son:
+>
+> * módulo `products`: `read` y `create`
+> * módulo `admin`: `read`
+>   Su último login es `null` (nunca ha entrado).
+>   Además, el usuario tiene una lista de direcciones (en orden):
+>
+> 1. { ciudad: Madrid, cp: 28001 }
+> 2. { ciudad: Valencia, cp: 46001 }”
+
+Requisitos:
+
+* Usa **arrays** cuando el orden importe (roles, direcciones, permisos de un módulo).
+* Usa **objetos** para pares clave/valor (por ejemplo permisos por módulo).
+* El JSON debe ser **estrictamente válido**.
+
+**Apartado 3 — API JSON (0,5 pt)**
+
+En `app.js`, crea una ruta:
+
+**GET `/api/users`** que devuelva JSON.
+
+Requisitos:
+
+1. Obtén los usuarios desde `database.js`.
+2. Devuelve:
+
+```json
+{ "ok": true, "data": [...] }
+```
+
+donde `data` es un **array** de usuarios.
+3) El array debe contener usuarios **sin contraseña** (no incluir `password`).
+4) Si ocurre un error (por ejemplo, la estructura no existe), devuelve:
+
+```json
+{ "ok": false, "error": "..." }
+```
+
+con un **status adecuado** (por ejemplo 500).
+
+> Nota: Si en `database.js` los usuarios vienen como objeto, conviértelos a array antes de devolverlos.
+
+---
+### Corrección: Problema 6 — JSON (validar / corregir / generar)
 **Apartado 1 — JSON inválido**
 
-1. Se le da un supuesto JSON con errores.
-2. Explique al menos 3 errores.
-3. Escriba la versión válida.
 
-**Apartado 2 — Construcción de JSON**
 
-1. A partir de un texto (“usuario con roles y permisos…”), escriba un JSON correcto.
-2. Debe usar arrays cuando el orden importe y objetos para pares clave/valor.
-
-**Apartado 3 — API JSON**
-
-1. Cree `GET /api/users` que devuelva:
-
-   * `{ ok: true, data: [...] }`
-2. Si hay error, devuelva `{ ok: false, error: "..." }` y un status adecuado.
 
 ---
 
