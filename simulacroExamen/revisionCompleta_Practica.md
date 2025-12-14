@@ -1,5 +1,5 @@
 
-## Problema 0 — Configuración base (calentamiento)
+## Problema 0 — Configuración base (calentamiento)  --> 🟡8
 
 Complete los apartados que aparecen a continuación:
 
@@ -62,7 +62,7 @@ const app= express(); //es lo qu enos faltaria arriba para este apartado
    ```
 ---
 
-## Problema 1 — Evitar hardcode (muy típico)
+## Problema 1 — Evitar hardcode (muy típico)  --> 🟡9
 
 De momento no tenemos claro el nombre definitivo de la aplicación y ahora mismo lo tenemos hardcodeado en cada ruta. Modifique la aplicación para definir en un único sitio el nombre de la tienda, que sea accesible en las vistas y elimine el nombre que aparece ahora en las rutas. 
 
@@ -106,7 +106,7 @@ app.use((req, res, next) => {
 ```
 ---
 
-## Problema 2 — Cookies + sesión + perfil (bomba del simulacro)
+## Problema 2 — Cookies + sesión + perfil (bomba del simulacro)  --> 🔴 16
 
 Tenemos que informar al usuario de que usamos cookies y que las acepte. Complete las siguientes tareas: 
 
@@ -232,7 +232,7 @@ app.post("/login", (req, res) => {
 
 ---
 
-## Problema 3 — Login, logout y sesiones (base del “ejemplo login”)
+## Problema 3 — Login, logout y sesiones (base del “ejemplo login”) --> 🟢 1
 
 Complete los apartados que aparecen a continuación:
 
@@ -316,7 +316,7 @@ app.post("/logout", (req, res) =>{
 ```
 ---
 
-## Problema 4 — Middlewares (checkAuth / checkAdmin) + ruta protegida
+## Problema 4 — Middlewares (checkAuth / checkAdmin) + ruta protegida  --> 🟢 2
 
 Complete los apartados que aparecen a continuación:
 
@@ -393,7 +393,7 @@ return res.status(403).render("forbidden", { title: "No autorizado" });
 ```
 ---
 
-## Problema 5 — EJS (tablas/listas + condicionales)
+## Problema 5 — EJS (tablas/listas + condicionales) --> 🟡7
 
 En una vista `admin.ejs` recibimos `users`. Complete:
 
@@ -452,7 +452,7 @@ En una vista `admin.ejs` recibimos `users`. Complete:
 
 ---
 
-## Problema 6 — JSON (validar / corregir / generar)
+## Problema 6 — JSON (validar / corregir / generar)  --> 🟢 4
 Dispones de una aplicación **Node.js + Express + EJS** con una “base de datos” en memoria. La estructura del proyecto es:
 
 ```
@@ -608,7 +608,7 @@ app.get("/api/users", (req, res) => {
 ```
 ---
 
-## Problema 7 — Recorrer objeto vs recorrer array (pregunta-trampa)
+## Problema 7 — Recorrer objeto vs recorrer array (pregunta-trampa)  --> 🟢 3
 
 Dispones de una aplicación **Node.js + Express + EJS** con una “base de datos” en memoria. La estructura del proyecto es:
 
@@ -740,7 +740,7 @@ app.get("/items", (req, res) => {
 
 ---
 
-## Problema 8 — CRUD sencillo (crear/editar/borrar)
+## Problema 8 — CRUD sencillo (crear/editar/borrar)  --> 🔴 15
 
 Tenemos `products` con `{ id, name, price, stock }`. Complete:
 
@@ -911,7 +911,7 @@ app.post("/products/:id/delete", checkAuth, checkAdmin, (req, res) => {
 ```
 ---
 
-## Problema 9 — Cliente JS (DOM + eventos) sin jQuery
+## Problema 9 — Cliente JS (DOM + eventos) sin jQuery  --> 🔴 13
 
 Complete los apartados que aparecen a continuación:
 
@@ -992,7 +992,7 @@ CSS:
 ```
 ---
 
-## Problema 10 — Fetch + async/await (más importante que Ajax)
+## Problema 10 — Fetch + async/await (más importante que Ajax)  --> 🟡10
 
 Complete los apartados que aparecen a continuación:
 
@@ -1075,7 +1075,7 @@ loadProducts();
 ```
 
 ---
-## Problema 11 — Express: middleware “global” de usuario
+## Problema 11 — Express: middleware “global” de usuario  --> 🟢 5
 
 Complete:
 
@@ -1121,7 +1121,7 @@ app.use((req, res, next) => {
 ```
 ---
 
-## Problema 12 — Variables de entorno + scripts npm
+## Problema 12 — Variables de entorno + scripts npm  --> 🟢 6
 
 Complete:
 
@@ -1155,7 +1155,7 @@ Guarda el árbol exacto de dependencias y versiones instaladas, para que todo el
 
 ---
 
-## Problema 13 — Node core (fs/path) + JSON fichero
+## Problema 13 — Node core (fs/path) + JSON fichero  --> 🔴 14
 
 Complete los apartados que aparecen a continuación:
 
@@ -1208,7 +1208,7 @@ function readFromFile() {
 ```
 ---
 
-## Problema 14 — Socket.io (rooms + emit) estilo kahoot
+## Problema 14 — Socket.io (rooms + emit) estilo kahoot  --> 🟡12
 
 Complete:
 
@@ -1274,8 +1274,8 @@ io.on("connection", (socket) => {
 
 ---
 
-## Problema 15 — HTML “está bien / está mal” + buenas prácticas
-
+## Problema 15 — HTML “está bien / está mal” + buenas prácticas  --> 🟡11
+ 
 Complete:
 
 **Apartado 1 — Errores en HTML**
