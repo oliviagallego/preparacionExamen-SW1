@@ -537,10 +537,72 @@ con un **status adecuado** (por ejemplo 500).
 ---
 ### Corrección: Problema 6 — JSON (validar / corregir / generar)
 **Apartado 1 — JSON inválido**
+- En JSON los strings (es decir texto como en la clave name), debe ir entre comillas dobles, encontramos 3 errores de ese estilo con name, en Ana, y en el email
+- El array de roles tiene una coma detras de user cuando no hay ningun valor después.
+- En el ultimo valor de un objeto no hace falta poner una coma.
 
+```js
+{
+  "name": "Ana",
+  "active": True,
+  "roles": ["admin", "user"],
+  "profile": {
+    "email": "ana@example.com",
+    "age": 20
+  }
+}
+```
 
+**Apartado 2 — Construcción de JSON (0,5 pt)**
 
+A partir del siguiente texto, escribe un **JSON válido** que lo represente:
 
+> “El usuario **maria** tiene id **7** y está activo.
+> Tiene **dos roles** (en este orden): `user`, `editor`.
+> Sus permisos por módulo son:
+>
+> * módulo `products`: `read` y `create`
+> * módulo `admin`: `read`
+>   Su último login es `null` (nunca ha entrado).
+>   Además, el usuario tiene una lista de direcciones (en orden):
+>
+> 1. { ciudad: Madrid, cp: 28001 }
+> 2. { ciudad: Valencia, cp: 46001 }”
+
+Requisitos:
+
+{
+"user" :{
+   "name": "maria", 
+   "id": 7, 
+   "activo": true, 
+   "roles": ["user", "editor"], 
+   "permissions": {"producto": ["read", "create"]}, "admin": ["read"]},
+   "direcciones": [{ "ciudad": "Madrid", "cp": 28001 },  { "ciudad": "Valencia", "cp": 46001 }]
+}
+}
+
+**Apartado 3 — API JSON (0,5 pt)**
+```
+const database = require("./database");
+
+app.get("/api/users", (req, res) => {
+  try {
+    const raw = database.users;
+    const arr = Array.isArray(raw) ? raw : Object.values(raw);
+
+    const safe = arr.map(u => {
+      const { password, ...rest } = u;
+      return rest;
+    });
+
+    res.json({ ok: true, data: safe });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: "Error interno" });
+  }
+});
+
+```
 ---
 
 ## Problema 7 — Recorrer objeto vs recorrer array (pregunta-trampa)
