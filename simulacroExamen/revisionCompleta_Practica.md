@@ -608,18 +608,88 @@ app.get("/api/users", (req, res) => {
 
 ## Problema 7 — Recorrer objeto vs recorrer array (pregunta-trampa)
 
-Se proporciona una “base de datos” en memoria. Complete:
+Dispones de una aplicación **Node.js + Express + EJS** con una “base de datos” en memoria. La estructura del proyecto es:
 
+```
+miapp/
+├─ app.js
+├─ database.js
+├─ package.json
+├─ public/
+└─ views/
+    ├─ layout.ejs
+    ├─ items.ejs
+    └─ item.ejs
+```
+
+En `app.js` ya están configurados: el motor EJS, la carpeta `views`, `public` como estáticos y `express.urlencoded(...)`.
+
+### Contexto: `database.js`
+
+En este examen, el profesor puede darte la base de datos en **dos formatos distintos**. Debes detectar el formato y actuar correctamente.
+
+**Formato A (OBJETO / diccionario):**
+
+```js
+const items = {
+  "p1": { id: "p1", name: "Jamón", price: 15.5, stock: 3 },
+  "p2": { id: "p2", name: "Queso", price: 8.0, stock: 10 },
+  "p3": { id: "p3", name: "Aceite", price: 6.2, stock: 0 }
+};
+module.exports = { items };
+```
+
+**Formato B (ARRAY):**
+
+```js
+const items = [
+  { id: "p1", name: "Jamón", price: 15.5, stock: 3 },
+  { id: "p2", name: "Queso", price: 8.0, stock: 10 },
+  { id: "p3", name: "Aceite", price: 6.2, stock: 0 }
+];
+module.exports = { items };
+```
+
+> En el examen se indicará cuál de los dos formatos es el que está usando la aplicación (A o B), pero **las tareas son las mismas**.
+
+**Apartado 1 — Listado (0,75 pt)**
+
+Cree en `app.js` la ruta:
+
+**GET `/items`** que haga lo siguiente:
+
+1. Obtenga `items` desde `database.js`.
+2. **Renderice** la vista `items.ejs` pasando una variable `items` que sea un **array**.
+3. Si los datos vienen en **formato A (objeto/diccionario)**:
+   * conviértalos a array (por ejemplo usando `Object.values(...)`).
+4. Si los datos vienen en **formato B (array)**:
+   * mantenga el array y use métodos de array cuando haga falta (`map`, `filter`, etc.).
+5. Pase también a la vista `title: "Listado"`.
+
+**No hace falta escribir `items.ejs`**, solo la ruta.
+
+**Apartado 2 — Búsqueda con query `?q=` (0,75 pt)**
+
+Modifique la ruta **GET `/items`** para que soporte un filtro opcional:
+
+* Si llega una query `?q=texto`, el listado debe incluir **solo** los items cuyo `name` contenga ese texto.
+* La búsqueda debe ser **case-insensitive** (ignorar mayúsculas/minúsculas).
+* Si `q` está vacío o no existe, se muestran todos.
+
+Ejemplo:
+
+* `/items?q=que` debería devolver “Queso”
+* `/items?q=JA` debería devolver “Jamón”
+
+> No hace falta paginación. Basta con filtrar en memoria.
+
+---
+
+### Corrección: Problema 7 — Recorrer objeto vs recorrer array (pregunta-trampa)
 **Apartado 1 — Listado**
 
-1. Renderice una vista con todos los elementos.
-2. Si los datos vienen como **objeto** (diccionario), conviértalo a array.
-3. Si vienen como **array**, use `.find`, `.filter`, `.map`.
 
 **Apartado 2 — Búsqueda**
-
-1. Añada filtro con query `?q=`.
-2. Debe ignorar mayúsculas/minúsculas.
 
 ---
 
