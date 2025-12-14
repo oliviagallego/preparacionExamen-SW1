@@ -624,7 +624,7 @@ miapp/
 
 En `app.js` ya están configurados: el motor EJS, la carpeta `views`, `public` como estáticos y `express.urlencoded(...)`.
 
-### Contexto: `database.js`
+**Contexto: `database.js`**
 
 En este examen, el profesor puede darte la base de datos en **dos formatos distintos**. Debes detectar el formato y actuar correctamente.
 
@@ -687,9 +687,54 @@ Ejemplo:
 
 ### Corrección: Problema 7 — Recorrer objeto vs recorrer array (pregunta-trampa)
 **Apartado 1 — Listado**
+```
+const express= require ("express");
+const app= express();
+const database= require("./database")
 
+app.get("/items", (req, res) => {
+   try {
+    const raw = database.items;
+    const arr = Array.isArray(raw) ? raw : Object.values(raw);
+
+    return res.render("items", {
+      title: "Listado",
+      items: itemsArray
+    });
+
+  } catch (err) {
+    res.status(500).json({ ok: false, error: "Error interno" });
+  }
+
+}); 
+```
 
 **Apartado 2 — Búsqueda**
+```
+app.get("/items", (req, res) => {
+  try {
+    const raw = database.items;
+    let itemsArray = Array.isArray(raw) ? raw : Object.values(raw);
+
+    const q = (req.query.q || "").trim().toLowerCase();
+
+    if (q) {
+      itemsArray = itemsArray.filter(item =>
+        item.name.toLowerCase().includes(q)
+      );
+    }
+
+    return res.render("items", {
+      title: "Listado",
+      items: itemsArray,
+      q // opcional, por si quieres mostrar la búsqueda en la vista
+    });
+  } catch (err) {
+    return res.status(500).send("Error interno");
+  }
+});
+
+```
 
 ---
 
@@ -723,6 +768,142 @@ Tenemos `products` con `{ id, name, price, stock }`. Complete:
 
 ---
 
+### Corrección:  Problema 8 — CRUD sencillo (crear/editar/borrar)
+
+**Apartado 1 — Listado**
+```
+app.get("/products", (req, res) => {
+   res.render("products", {title: "Productos", products: database.products});
+});
+```
+
+**Apartado 2 — Crear**
+```
+app.get("/products/new", (req, res) =>{
+      res.render("products-form", {
+         title: "Nuevos productos",
+         errors:[],
+         valores:{name:"", price: "", stock: ""
+      }});
+});
+
+app.post("/products", (req, res) => {
+  const { name, price, stock } = req.body;
+
+  const errors = [];
+  const values = { name, price, stock };
+
+  // Validaciones
+  if (!name || !name.trim()) errors.push("El nombre es obligatorio.");
+
+  const priceNum = Number(price);
+  if (!Number.isFinite(priceNum) || priceNum <= 0) {
+    errors.push("El precio debe ser un número mayor que 0.");
+  }
+
+  const stockNum = Number(stock);
+  if (!Number.isInteger(stockNum) || stockNum < 0) {
+    errors.push("El stock debe ser un entero mayor o igual que 0.");
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).render("product-form", {
+      title: "Nuevo producto",
+      errors,
+      values
+    });
+  }
+
+  // Crear producto (id incremental)
+  const nextId =
+    database.products.length > 0
+      ? Math.max(...database.products.map(p => p.id)) + 1
+      : 1;
+
+  database.products.push({
+    id: nextId,
+    name: name.trim(),
+    price: priceNum,
+    stock: stockNum
+  });
+
+  return res.redirect("/products");
+});
+
+   
+```
+**Apartado 3 — Editar**
+```
+app.get("/products/:id/edit", (req, res) => {
+  const id = Number(req.params.id);
+  const product = database.products.find(p => p.id === id);
+
+  if (!product) return res.sendStatus(404);
+
+  return res.render("product-form", {
+    title: "Editar producto",
+    errors: [],
+    values: {
+      name: product.name,
+      price: String(product.price),
+      stock: String(product.stock)
+    },
+    productId: product.id // opcional para el action del form
+  });
+});
+```
+```
+app.post("/products/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const product = database.products.find(p => p.id === id);
+  if (!product) return res.sendStatus(404);
+
+  const { name, price, stock } = req.body;
+  const errors = [];
+  const values = { name, price, stock };
+
+  if (!name || !name.trim()) errors.push("El nombre es obligatorio.");
+
+  const priceNum = Number(price);
+  if (!Number.isFinite(priceNum) || priceNum <= 0) {
+    errors.push("El precio debe ser un número mayor que 0.");
+  }
+
+  const stockNum = Number(stock);
+  if (!Number.isInteger(stockNum) || stockNum < 0) {
+    errors.push("El stock debe ser un entero mayor o igual que 0.");
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).render("product-form", {
+      title: "Editar producto",
+      errors,
+      values,
+      productId: id
+    });
+  }
+
+  product.name = name.trim();
+  product.price = priceNum;
+  product.stock = stockNum;
+
+  return res.redirect("/products");
+});
+```
+```
+app.post("/products/:id/delete", checkAuth, checkAdmin, (req, res) => {
+  const id = Number(req.params.id);
+
+  const idx = database.products.findIndex(p => p.id === id);
+  if (idx === -1) return res.sendStatus(404);
+
+  database.products.splice(idx, 1);
+  return res.redirect("/products");
+});
+
+```
+---
+
 ## Problema 9 — Cliente JS (DOM + eventos) sin jQuery
 
 Complete los apartados que aparecen a continuación:
@@ -740,6 +921,9 @@ Complete los apartados que aparecen a continuación:
 **Variación**
 
 * “Explique qué hace `defer` y `async` y cuál usaría para scripts del cliente”.
+
+---
+### Corrección: Problema 9 — Cliente JS (DOM + eventos)
 
 ---
 
