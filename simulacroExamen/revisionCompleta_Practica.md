@@ -81,7 +81,8 @@ De momento no tenemos claro el nombre definitivo de la aplicación y ahora mismo
 
 **Apartado 1 — Nombre global en vistas**
 1.
-``` app.locals.appTitle = "Nombre definitivo";
+```
+app.locals.appTitle = "Nombre definitivo";
 ```
 2. En donde aparezca el titulo en el html debemos cambiarlo por:
 ```<titule> <%= appTitle %> </title> ```
@@ -297,7 +298,8 @@ app.post("/login", (req, res) => {
 
 ```
 
-2.```
+2.
+```
 app.post("/logout", (req, res) =>{
    req.session.destroy((err) =>{
    if(err) return res.sendStatus(500);
