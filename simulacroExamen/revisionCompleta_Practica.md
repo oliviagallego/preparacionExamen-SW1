@@ -570,7 +570,7 @@ A partir del siguiente texto, escribe un **JSON válido** que lo represente:
 > 2. { ciudad: Valencia, cp: 46001 }”
 
 Requisitos:
-
+```js
 {
 "user" :{
    "name": "maria", 
@@ -581,6 +581,7 @@ Requisitos:
    "direcciones": [{ "ciudad": "Madrid", "cp": 28001 },  { "ciudad": "Valencia", "cp": 46001 }]
 }
 }
+```
 
 **Apartado 3 — API JSON (0,5 pt)**
 ```
