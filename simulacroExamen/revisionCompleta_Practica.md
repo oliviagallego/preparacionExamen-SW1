@@ -350,29 +350,32 @@ Complete los apartados que aparecen a continuación:
 ### Corrección: Problema 4- Middlewares (checkAuth / checkAdmin) + ruta protegida
 
 **Apartado 1 — checkAuth**
+```
 funcion checkAuth(req, res, next){
    if(req.session.user){
       next();
    }
    return res.redirect("/login");
 }
-
+```
 **Apartado 2 — checkAdmin**
+```
 funcion checkAdmin (req, res, next){
    if(req.session.user.role === "admin"){
       next();
    }
    return res.status(403);
 }
-
+```
 **Apartado 3 — /admin**
+```
 const database = require("./database");
 
 app.get("/admin", checkAuth, checkAdmin, (req, res) => {
   const usersArray = Object.values(database.users);
   res.render("admin", { title: "Admin", users: usersArray });
 });
-
+```
 
 **Variaciones típicas**
 Aplicar middleware a varias rutas: 
