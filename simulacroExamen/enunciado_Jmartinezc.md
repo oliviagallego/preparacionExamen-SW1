@@ -419,9 +419,36 @@ app.post("/admin/deleteUser", (req, res) =>{
 ```
 ---
 ## Apartado 5 — Menú común
+Primero hacemos un middleware de global en app.js:
+```
+// Middleware global: poner el usuario actual en res.locals
+app.use((req, res, next) => {
+  res.locals.currentUser = req.session ? req.session.user : null;
+  next();
+});
 
+```
+views/header.ejs:
+```
+<nav>
+  <a href="/">Home</a>
 
+  <% if (currentUser) { %>
+    <span>Hola, <%= currentUser.username %></span>
 
+    <% if (currentUser.role === "admin") { %>
+      <a href="/admin">Panel admin</a>
+    <% } %>
+
+    <form action="/logout" method="POST" style="display:inline;">
+      <button type="submit">Logout</button>
+    </form>
+  <% } else { %>
+    <a href="/login">Login</a>
+  <% } %>
+</nav>
+<hr>
+```
 
 
 
