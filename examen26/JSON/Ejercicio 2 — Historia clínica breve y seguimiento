@@ -1,0 +1,63 @@
+“Paciente: Rocío Hernández Vidal, 22 años, nacida el 18 de febrero de 2002, estudiante, vive en Leganés. Acude a urgencias el 12/03/2025 a las 03:40 por dolor abdominal intenso en fosa ilíaca derecha con náuseas; fiebre subjetiva. No alergias conocidas. Antecedentes: asma leve en infancia; apendicitis descartada en 2019. Medicación habitual: ninguna.
+Exploración: TA 108/72, FC 102, T 37,8 ºC. Abdomen doloroso a palpación profunda. Analítica: leucocitos 14.200, neutrófilos 83%, PCR 4,2 mg/dL. Ecografía: “apéndice no concluyente”, líquido libre mínimo. Se indica TAC con contraste: apendicitis aguda probable.
+Tratamiento: ingreso, suero, analgesia, ceftriaxona y metronidazol. Se realiza apendicectomía laparoscópica a las 13:15 del mismo día. Alta el 14/03/2025 con pauta: ibuprofeno 600 mg cada 8 horas si dolor (máx. 3 días), revisión en cirugía en 10 días.
+Seguimiento: el 19/03/2025 consulta telefónica: “herida umbilical con enrojecimiento leve sin supuración”, sin fiebre. Se recomienda vigilancia y acudir si empeora. El 22/03/2025 revisión presencial: herida OK, retirados puntos.”
+
+
+{
+  "paciente": {
+    "nombre": "Rocío Hernández Vidal",
+    "nacimiento": "2002-02-18",
+    "ocupacion": "estudiante",
+    "residencia": "Leganés",
+    "antecedentes": ["asma leve en infancia", "apendicitis descartada en 2019"],
+    "alergias": [],
+    "medicacionHabitual": []
+  },
+  "episodio": {
+    "ingreso": "2025-03-12T03:40",
+    "motivo": ["dolor abdominal en fosa ilíaca derecha", "náuseas", "fiebre subjetiva"],
+    "exploracion": {
+      "TA": "108/72",
+      "FC": 102,
+      "T": 37.8
+    },
+    "analitica": {
+      "leucocitos": 14200,
+      "neutrofilosPct": 83,
+      "PCR": 4.2
+    },
+    "imagen": {
+      "eco": "apéndice no concluyente, líquido libre mínimo",
+      "tac": "apendicitis aguda probable"
+    },
+    "tratamiento": ["ingreso", "suero", "analgesia", "ceftriaxona", "metronidazol"],
+    "cirugia": {
+      "tipo": "apendicectomía laparoscópica",
+      "fecha": "2025-03-12T13:15"
+    },
+    "alta": {
+      "fecha": "2025-03-14",
+      "medicacion": {
+        "ibuprofeno": {
+          "dosisMg": 600,
+          "intervaloH": 8,
+          "maxDias": 3
+        }
+      },
+      "revisionDias": 10
+    },
+    "seguimiento": [
+      {
+        "fecha": "2025-03-19",
+        "tipo": "telefonica",
+        "estado": "eritema leve sin supuración, afebril"
+      },
+      {
+        "fecha": "2025-03-22",
+        "tipo": "presencial",
+        "resultado": "herida OK, puntos retirados"
+      }
+    ]
+  }
+}
