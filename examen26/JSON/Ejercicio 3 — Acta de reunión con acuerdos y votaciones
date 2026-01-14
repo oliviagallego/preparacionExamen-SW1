@@ -1,0 +1,46 @@
+“Acta nº 7 del Consejo del Departamento de Matemática Aplicada. Reunión celebrada el viernes 17 de enero de 2025 a las 10:00 en la Sala 2. Asistentes: Dra. Elisa Montoro (Directora), Dr. Iván Perales, Dra. Sandra Quiñones, Dr. Tomás Echevarría, Dra. Leila Jabbour, y como invitado sin voto Sergio Morán (representante estudiantil). Ausencias justificadas: Dr. Bruno Calzada.
+Orden del día: (1) Aprobación del acta anterior; (2) Asignación de docencia 2025/26; (3) Presupuesto para material; (4) Ruegos y preguntas.
+Acuerdos:
+
+Se aprueba el acta anterior por unanimidad (5 votos a favor).
+
+Docencia: la asignatura “Ecuaciones Diferenciales II” pasa a coordinarla la Dra. Quiñones; “Métodos Numéricos” se divide en dos grupos, coordinados por Dr. Perales y Dra. Jabbour. Votación: 4 a favor, 1 abstención.
+
+Se aprueba la compra de 12 licencias de software “SimuLab Pro” por 2.760 € (IVA incluido). Condición: tramitar antes del 15/02/2025. Votación: 5 a favor.
+Ruegos: El Dr. Echevarría solicita revisar criterios de evaluación en febrero. Se fija próxima reunión el 11/02/2025 a las 09:30.”
+
+
+{
+  "acta":7,
+  "departamento": "Matemática Aplicada",
+  "reunion":{
+    "fecha": "2025-01-17T10:00",
+    "sala": 2
+  },
+  "asistentes": { "directora":"Dra. Elisa Montoro", "profesores": ["Dr. Iván Perales", "Dra. Sandra Quiñones", "Dr. Tomás Echevarría", "Dra. Leila Jabbour"], "representante estudiantil": "Sergio Morán", "ausencias":["Dr. Bruno Calzada"]},
+  "orden": ["Aprobación del acta anterior", "Asignación de docencia 2025/26", "Presupuesto para material", "Ruegos y preguntas"],
+  "acuerdos": [
+    {
+      "tipo": "acta",
+      "resultado": { "favor": 5 }
+    },
+    {
+      "tipo": "docencia",
+      "asignaciones": {
+        "Ecuaciones Diferenciales II": "Sandra Quiñones",
+        "Métodos Numéricos": ["Iván Perales", "Leila Jabbour"]
+      },
+      "votacion": { "favor": 4, "abstencion": 1 }
+    },
+    {
+      "tipo": "compra",
+      "item": "SimuLab Pro",
+      "licencias": 12,
+      "coste": 2760,
+      "fecha_limite": "2025-02-15",
+      "votacion": { "favor": 5 }
+    }
+  ],
+  "ruegos": "revisar criterios de evaluación",
+  "proxima_reunion": "2025-02-11T09:30"
+}
