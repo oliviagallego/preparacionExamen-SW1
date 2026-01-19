@@ -1,0 +1,536 @@
+# SIMULACRO — Sistemas Web I — PARTE PRÁCTICA (2 horas, papel)
+
+## Contexto
+
+Se desea una **mini aplicación web** con **Node.js + Express + EJS** para gestionar usuarios con roles y un **panel admin**. Además, el panel admin recibirá **notificaciones en tiempo real** con **Socket.IO** cuando alguien inicia sesión o cuando un admin elimina un usuario.
+
+* Datos en memoria (NO BD real).
+* Se usa **express-session** para recordar el usuario logueado.
+* La estructura se debe respetar.
+* Se valorará que el HTML sea correcto y que las vistas EJS recorran correctamente **arrays/objetos**.
+
+---
+
+## Estructura del proyecto (se proporciona)
+
+```
+prueba/
+├─ app.js
+├─ bin/
+│  └─ www
+├─ database.js
+├─ sockets.js
+├─ routes/
+│  ├─ index.js
+│  ├─ auth.js
+│  └─ admin.js
+├─ views/
+│  ├─ partials/
+│  │  └─ header.ejs
+│  ├─ index.ejs
+│  ├─ login.ejs
+│  └─ admin.ejs
+└─ public/
+   └─ styles.css
+```
+---
+
+## Usuarios iniciales (en memoria)
+
+* `admin / admin123` → role: `admin`
+* `maria / maria123` → role: `user`
+* `lucas / lucas123` → role: `user`
+
+---
+
+# Tareas a completar
+
+## Apartado 1 — Arranque del servidor + Socket.IO (1,5 puntos)
+
+En `bin/www`:
+
+1. Configura el puerto como `process.env.PORT` o `3000`.
+2. Crea el servidor HTTP con `http.createServer(app)`.
+3. Arranca escuchando y muestra por consola el puerto.
+4. Inicializa Socket.IO usando `initSockets(server)`.
+
+---
+
+## Apartado 2 — Configuración Express (1 punto)
+
+En `app.js`:
+
+1. Configura **EJS** como motor de plantillas y la carpeta `views`.
+2. Configura `public` como estáticos.
+3. Configura el parseo de formularios (`express.urlencoded`).
+4. Configura sesión con `express-session`.
+5. Crea un middleware que deje accesible el usuario logueado en `res.locals.currentUser` para todas las vistas.
+
+---
+
+## Apartado 3 — Login/Logout (2 puntos)
+
+En `routes/auth.js`:
+
+1. `GET /login` renderiza `login.ejs`.
+2. `POST /login`:
+
+   * Recibe `username` y `password`.
+   * Valida contra `database.js`.
+   * Si OK: guarda usuario en sesión (`req.session.user = ...`), actualiza `last_login` y redirige a `/`.
+   * Si NO: re-renderiza login con error.
+   * Cuando el login sea correcto, emite un evento socket **solo a admins**: `io.to("admins").emit("admin:notice", ...)`
+3. `POST /logout`: destruye sesión y redirige a `/`.
+
+---
+
+## Apartado 4 — Panel Admin + control de acceso (2,5 puntos)
+
+En `routes/admin.js`:
+
+1. Crea middleware `requireAdmin` usando `next`:
+
+   * Si no hay sesión: redirect `/login`
+   * Si hay usuario pero no es admin: redirect `/`
+   * Si es admin: `next()`
+2. `GET /admin` (protegida con `requireAdmin`) renderiza `admin.ejs` pasando:
+
+   * `users` (lista de usuarios)
+3. `POST /admin/delete` (protegida con `requireAdmin`):
+
+   * Recibe `username`.
+   * NO permitir borrar:
+
+     * al propio admin logueado
+     * a un usuario con role `admin`
+   * Si se borra: emitir a room admins: `admin:notice` y redirigir a `/admin`.
+
+---
+
+## Apartado 5 — Socket.IO rooms + cliente admin (2 puntos)
+
+En `sockets.js`:
+
+1. Cuando un cliente se conecta, escucha el evento `client:joinAdmins`:
+
+   * Si el payload contiene `{ token: "admin" }`, mete ese socket en la room `"admins"`.
+2. Expón una función `getIO()` para poder emitir desde rutas.
+
+En `views/admin.ejs`:
+
+1. Conecta con socket.io en cliente.
+2. Al cargar, emite `client:joinAdmins` con `{ token: "admin" }`.
+3. Escucha `admin:notice` y muestra el mensaje en una zona `<div id="notices">`.
+
+---
+
+# Código proporcionado (con TODOs)
+
+## `database.js`
+
+```js
+// database.js
+const users = {
+  admin: { username: "admin", password: "admin123", role: "admin", last_login: null },
+  maria: { username: "maria", password: "maria123", role: "user", last_login: null },
+  lucas: { username: "lucas", password: "lucas123", role: "user", last_login: null },
+};
+
+function findUser(username) {
+  return users[username] || null;
+}
+
+function allUsers() {
+  // devuelve un ARRAY de usuarios para recorrerlo en EJS
+  return Object.values(users);
+}
+
+function deleteUser(username) {
+  delete users[username];
+}
+
+module.exports = { users, findUser, allUsers, deleteUser };
+```
+
+---
+
+## `sockets.js`
+
+```js
+// sockets.js
+let io = null;
+
+function initSockets(server) {
+  // TODO: crear io con socket.io
+  // const { Server } = require("socket.io");
+  // io = new Server(server);
+
+  // TODO: on connection...
+  // io.on("connection", (socket) => { ... });
+
+  // Dentro de connection:
+  // TODO: escuchar "client:joinAdmins"
+  // Si payload.token === "admin" => socket.join("admins")
+}
+
+function getIO() {
+  // TODO: devolver io ya inicializado
+  return io;
+}
+
+module.exports = { initSockets, getIO };
+```
+
+---
+
+## `app.js`
+
+```js
+// app.js
+const express = require("express");
+const session = require("express-session");
+
+const indexRouter = require("./routes/index");
+const authRouter = require("./routes/auth");
+const adminRouter = require("./routes/admin");
+
+const app = express();
+
+// TODO (Apartado 2.1): configurar views + ejs
+// app.set("views", ...)
+// app.set("view engine", "ejs");
+
+// TODO (Apartado 2.2): estáticos
+// app.use(express.static(...))
+
+// TODO (Apartado 2.3): parseo formularios
+// app.use(express.urlencoded({ extended: true }));
+
+// TODO (Apartado 2.4): sesión
+// app.use(session({ secret: "...", resave: false, saveUninitialized: false }));
+
+// TODO (Apartado 2.5): res.locals.currentUser
+// app.use((req,res,next)=>{ res.locals.currentUser = ...; next(); });
+
+app.use("/", indexRouter);
+app.use("/", authRouter);
+app.use("/", adminRouter);
+
+// 404 mínimo
+app.use((req, res) => res.status(404).send("Not Found"));
+
+module.exports = app;
+```
+
+---
+
+## `bin/www`
+
+```js
+#!/usr/bin/env node
+// bin/www
+const http = require("http");
+const app = require("../app");
+const { initSockets } = require("../sockets");
+
+// TODO (Apartado 1.1): PORT env o 3000
+const port = /* TODO */;
+
+// TODO (Apartado 1.2): crear servidor http
+const server = /* TODO */;
+
+// TODO (Apartado 1.4): init socket
+/* TODO initSockets(server); */
+
+// TODO (Apartado 1.3): listen + console.log
+server.listen(port, () => {
+  console.log("Servidor escuchando en puerto " + port);
+});
+```
+
+---
+
+## `routes/index.js`
+
+```js
+// routes/index.js
+const express = require("express");
+const { allUsers } = require("../database");
+
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  // Renderiza inicio mostrando:
+  // - si hay usuario logueado: username, role, last_login
+  // - si no: mensaje "No logged user"
+  // También muestra un contador de usuarios totales (allUsers().length)
+  res.render("index", {
+    // TODO: pasar lo necesario a la vista
+  });
+});
+
+module.exports = router;
+```
+
+---
+
+## `routes/auth.js`
+
+```js
+// routes/auth.js
+const express = require("express");
+const { findUser } = require("../database");
+const { getIO } = require("../sockets");
+
+const router = express.Router();
+
+router.get("/login", (req, res) => {
+  // TODO (Apartado 3.1): render login.ejs
+  // res.render("login", { error: null });
+});
+
+router.post("/login", (req, res) => {
+  // TODO (Apartado 3.2):
+  // - leer username/password
+  // - validar
+  // - si ok: req.session.user = { username, role }
+  // - actualizar last_login del usuario
+  // - emitir a admins: io.to("admins").emit("admin:notice", {...})
+  // - redirect "/"
+  // - si error: render login con error
+
+  res.send("TODO");
+});
+
+router.post("/logout", (req, res) => {
+  // TODO (Apartado 3.3): destruir sesión y redirect "/"
+  res.send("TODO");
+});
+
+module.exports = router;
+```
+
+---
+
+## `routes/admin.js`
+
+```js
+// routes/admin.js
+const express = require("express");
+const { allUsers, findUser, deleteUser } = require("../database");
+const { getIO } = require("../sockets");
+
+const router = express.Router();
+
+function requireAdmin(req, res, next) {
+  // TODO (Apartado 4.1)
+  // - si no req.session.user => redirect "/login"
+  // - si role !== "admin" => redirect "/"
+  // - else next()
+  return res.send("TODO requireAdmin");
+}
+
+router.get("/admin", requireAdmin, (req, res) => {
+  // TODO (Apartado 4.2):
+  // render "admin" con users: allUsers()
+  res.send("TODO /admin");
+});
+
+router.post("/admin/delete", requireAdmin, (req, res) => {
+  // TODO (Apartado 4.3):
+  // - username del body
+  // - no borrar si:
+  //    a) username === req.session.user.username
+  //    b) findUser(username)?.role === "admin"
+  // - si borras: deleteUser(username) y emitir admin:notice a room admins
+  // - redirect "/admin"
+  res.send("TODO delete");
+});
+
+module.exports = router;
+```
+
+---
+
+## `views/partials/header.ejs`
+
+```ejs
+<header class="topbar">
+  <nav>
+    <a href="/">Home</a>
+
+    <% // TODO (menú dinámico):
+       // Si currentUser existe:
+       //   mostrar "Logout" (form POST /logout)
+       //   y si role admin: link a /admin
+       // Si no: link a /login
+    %>
+  </nav>
+</header>
+```
+
+---
+
+## `views/index.ejs`
+
+```ejs
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Mini App</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <% include partials/header %>
+
+  <main class="container">
+    <h1>Inicio</h1>
+
+    <p>Total users: <strong><%= totalUsers %></strong></p>
+
+    <% if (currentUser) { %>
+      <section class="card">
+        <h2>Logged user</h2>
+        <ul>
+          <li>Username: <%= currentUser.username %></li>
+          <li>Role: <%= currentUser.role %></li>
+          <li>Last login: <%= lastLoginText %></li>
+        </ul>
+      </section>
+    <% } else { %>
+      <p class="muted">No logged user</p>
+    <% } %>
+  </main>
+</body>
+</html>
+```
+
+---
+
+## `views/login.ejs`
+
+```ejs
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <% include partials/header %>
+
+  <main class="container">
+    <h1>Login</h1>
+
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+
+    <form method="post" action="/login" class="card">
+      <label>Username
+        <input name="username" required>
+      </label>
+
+      <label>Password
+        <input name="password" type="password" required>
+      </label>
+
+      <button type="submit">Sign in</button>
+    </form>
+
+    <p class="muted">Prueba: admin/admin123, maria/maria123, lucas/lucas123</p>
+  </main>
+</body>
+</html>
+```
+
+---
+
+## `views/admin.ejs`
+
+```ejs
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Admin</title>
+  <link rel="stylesheet" href="/styles.css">
+
+  <!-- cliente socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <% include partials/header %>
+
+  <main class="container">
+    <h1>Admin Panel</h1>
+
+    <section class="card">
+      <h2>Notices (realtime)</h2>
+      <div id="notices" class="notices"></div>
+    </section>
+
+    <section class="card">
+      <h2>Users</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Last login</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(u => { %>
+            <tr>
+              <td><%= u.username %></td>
+              <td><%= u.role %></td>
+              <td><%= u.last_login ? u.last_login : "Never" %></td>
+              <td>
+                <% if (u.role !== "admin") { %>
+                  <form method="post" action="/admin/delete">
+                    <input type="hidden" name="username" value="<%= u.username %>">
+                    <button type="submit">Delete</button>
+                  </form>
+                <% } else { %>
+                  <span class="muted">—</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    // TODO (Apartado 5):
+    // 1) const socket = io();
+    // 2) socket.emit("client:joinAdmins", { token: "admin" })
+    // 3) socket.on("admin:notice", (payload) => pintar en #notices)
+  </script>
+</body>
+</html>
+```
+
+---
+
+## `public/styles.css`
+
+```css
+body { font-family: system-ui, sans-serif; margin: 0; }
+.topbar { padding: 12px 16px; background: #111; }
+.topbar a, .topbar button { color: #fff; margin-right: 12px; text-decoration: none; background: transparent; border: 0; cursor: pointer; }
+.container { padding: 16px; max-width: 900px; margin: 0 auto; }
+.card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 12px 0; }
+.error { background: #ffe2e2; border: 1px solid #ff9a9a; padding: 10px; border-radius: 8px; }
+.muted { color: #777; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }
+.notices > div { padding: 8px; border-bottom: 1px dashed #ddd; }
+```
+
