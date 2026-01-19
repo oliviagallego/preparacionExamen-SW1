@@ -1,0 +1,94 @@
+### Enunciado 
+
+A partir del siguiente código HTML, detecta y explica al menos 10 errores.
+Para cada error indica: Línea o fragmento, Qué está mal, Por qué es incorrecto y Cómo se corrige
+
+1  <DOCTYPE html>
+2  <html lang=es>
+3    <head>
+4      <meta charset="UTF8">
+5      <title>Página <em>web</em></title>
+6      <meta name="description">
+7      <link rel="stylesheet" href="styles.css">
+8      <header>
+9        <h1>Mi página</h1>
+10     </header>
+11   </head>
+
+12   <body>
+13     <main>
+14       <p>
+15         Bienvenido a mi sitio
+16         <section id="inicio">
+17           <p>Sección principal</p>
+18         </section>
+19       </p>
+
+20       <img src=img/foto.png width="400px">
+
+21       <table>
+22         <tr>
+23           <th scope="fila">Nombre</th>
+24           <th>Edad</th>
+25         </tr>
+26         <tr>
+27           <td>Ana
+28           <td>22</td>
+29         </tr>
+30       </table>
+
+31       <form method="PUT" action="/enviar">
+32         <label for="user">Usuario</label>
+33         <input type="text" id="usuario">
+34
+35         <label>Email</label>
+36         <input type="email" name="email">
+37
+38         <input type="checkbox" checked="false"> Acepto
+39         <button type="button">Enviar</button>
+40       </form>
+
+41       <audio src="audio.mp4"></audio>
+42       <br></br>
+43     </main>
+
+44     <!-- comentario ---->
+45   </BODY>
+46 </html>
+
+
+
+
+Correción:
+- Linea 1: <!DOCTYPE html>, falta el punto de exclamacion.
+- Linea 2: <html lang="es">, el valor tiene que ir siempre entre comillas.
+- Linea 4: <meta charset="UTF-8">, faltaba el guion de UTF-8.
+- Linea 5: <title>Página web</title>, no se pueden usar etiquetas dentro de un title.
+- Linea 6: <meta name="description" content="des">, falta el content
+- Linea 8, 9, 10: <header> <h1>Mi página</h1> </header> no se puede poner headers en el head, asi que borrar.
+- Linea 14-19: Un <p> no puede contener elementos de bloque como <section>
+- Linea 20: <img src="img/foto.png" width="400" alt="description">, falta el alt que es obligatorio, width no tiene que tener px, y los valores van entre comillas.
+- Linea 23: <th scope="col">Nombre</th>,  el scope tiene que ser o col o row.
+- Linea 27: <td>Ana</td>, falta el cierre
+- Linea 31: <form method="get" action="/enviar">, los metodos tienen que ser get o post e ir en minusculas.
+- linea 33: <input type="text" id="user" name="usuario">, el id tiene que ser igual que el for del laberl, y si no tiene el name, no se envia.
+- Linea 35:  <label for="email">Email</label>, como el input no esta dentro del label, tenemos que poner el for.
+- Linea 36: <input type="email" name="email" id="email">, falta el id para hacer connexion con el label.
+- Linea 38: <input type="checkbox" checked name="check"> Acepto, el checked es siempre true y si no pones el name no se envia.
+- Linea 39: <button type="submit">Enviar</button>, el tipo es submit para enviar.
+- Linea 41:<br></br>, un void element no tiene cierre
+- Linea 44: <!-- comentario -->, cierre del comentario mal escrito.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
