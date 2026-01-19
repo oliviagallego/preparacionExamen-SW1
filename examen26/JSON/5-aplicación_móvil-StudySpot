@@ -1,0 +1,40 @@
+La aplicación móvil “StudySpot” permite a estudiantes universitarios valorar y comentar espacios de estudio como bibliotecas, salas de trabajo y cafeterías tranquilas. Cada espacio tiene una localización, un tipo y un horario aproximado. Los usuarios pueden publicar reseñas, puntuar de 1 a 5, responder a reseñas de otros usuarios, y editar sus propios comentarios, quedando registrada la fecha de edición.
+
+El espacio “Biblioteca Central – Campus Norte”, situado en Madrid, tipo biblioteca universitaria, horario habitual de 08:00 a 22:00, cuenta con varias interacciones durante abril de 2025.
+
+El usuario Andrés López (nombre de usuario andresl) publica una reseña el 3 de abril de 2025 a las 18:47, otorgando 5 estrellas y escribiendo:
+“Muy silenciosa y con muchos enchufes. Ideal para estudiar por la tarde.”
+
+El usuario Paula Núñez (paulan) responde a esa reseña el 4 de abril de 2025 a las 09:15 con el comentario:
+“Totalmente de acuerdo, aunque a última hora se llena bastante.”
+
+Posteriormente, Andrés edita su reseña el 5 de abril de 2025 a las 12:02, modificando el texto a:
+“Muy silenciosa y con muchos enchufes. Ideal para estudiar por la tarde, pero se llena a partir de las 20:00.”
+La puntuación se mantiene sin cambios.
+
+El usuario Marcos Gil (mgil) publica una reseña independiente el 10 de abril de 2025 a las 21:10, con 2,5 estrellas, indicando:
+“Buen sitio, pero el aire acondicionado suele estar demasiado fuerte.”
+
+Ambas reseñas permanecen visibles. La aplicación muestra la puntuación media del espacio, calculada automáticamente a partir de las valoraciones actuales.
+
+{
+"centro": {"nombre": "Biblioteca Central – Campus Norte",
+           "lugar":"Madrid",
+           "categoria": "biblioteca universitaria",
+           "horario":[8, 22]
+          },
+ "reseñas": {"usuario": ["andresl", "Andrés López"],
+             "puntuacion": 5,
+             "comentario":[{"texto":"Muy silenciosa y con muchos enchufes. Ideal para estudiar por la tarde.", "fecha":"2025-04-03T18:47"}],
+             "respuestas": [{"ususario": ["paulan", "Paula Núñez"],
+                            "comentario":"Totalmente de acuerdo, aunque a última hora se llena bastante",
+                            "fecha":"2025-04-04T09:15"
+                            }],
+             "edicion":[{"texto":"Muy silenciosa y con muchos enchufes. Ideal para estudiar por la tarde, pero se llena a partir de las 20:00.", "fecha":"2025-04-05T12:02" }]
+            },
+            {"usuario": ["mgil", "Marcos Gil"],
+             "puntuacion": 2.5,
+             "comentario":[{"texto":"Buen sitio, pero el aire acondicionado suele estar demasiado fuerte.", "fecha":"2025-04-10T21:10"}],
+            },
+
+}
