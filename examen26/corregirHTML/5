@@ -1,0 +1,96 @@
+### Enunciado:
+Analiza el siguiente código HTML y detecta y explica al menos 10 errores.
+Para cada error indica: Línea o fragmento, Qué está mal, Por qué es incorrecto y Cómo se corrige.
+
+1  <!doctype html>
+2  <html lang="ES">
+3    <head>
+4      <meta charset="utf8">
+5      <title>Página <span>principal</span></title>
+6      <meta name="description">
+7      <base href="http://localhost/">
+8      <main>
+9        <h1>Bienvenidos</h1>
+10     </main>
+11     <link rel="stylesheet" href="/css/style.css">
+12   </head>
+
+13   <body>
+14     <section>
+15       <p>
+16         Texto introductorio
+17         <nav>
+18           <a href="#inicio">Inicio</a>
+19         </nav>
+20       </p>
+21     </section>
+
+22     <img src="images/logo.png">
+
+23     <table>
+24       <tr>
+25         <th scope="column">Nombre</th>
+26         <th scope="row">Edad</th>
+27       </tr>
+28       <tr>
+29         <td>Ana<td>21</td>
+30       </tr>
+31     </table>
+
+32     <form action="procesar.php" method="PATCH">
+33       <label for="user">Usuario</label>
+34       <input type="text" id="usuario" name="usuario">
+35
+36       <label>Password</label>
+37       <input type="password" id="password">
+38
+39       <input type="radio" checked="false"> Acepto
+40       <button>Enviar</button>
+41     </form>
+
+42     <audio src="musica.wav"></audio>
+43     <br>
+44
+45     <!-- comentario -- --->
+46   </body>
+47 </html>
+
+
+### Correccion:
+- Linea 2: <html lang="ES">, no es un error, pero es mala practica no poner "es" en minusculas.
+- Linea 4: <meta charset="UTF-8">, UTF-8 es en mayusculas y con guión.
+- Linea 5: <title>Página principal</title>, dentro de title solo puede ir texto, nada de otras etiquetas.
+- Linea 6: <meta name="description" content="description">, falta el content.
+- Linea 8, 9 y 10: <main> <h1>Bienvenidos</h1> </main>, el main y los headers van en body, no el head.
+- Linea 15-20: Un <p> no puede contener elementos de bloque como nav.
+- Linea 22: <img src="images/logo.png" alt="descripcion">, falta el alt que es obligatorio.
+- Linea 25: <th scope="col">Nombre</th>, los scope solo pueden ser col, row, colgroup o rowgroup.
+- Linea 29: <td>Ana</td> <td>21</td>, falta una etiqueta de cierre.
+- Linea 32: <form action="procesar.php" method="get">, debes poner get o post en minusculas como metodo, si no se pondra get de predetermminado.
+- Linea 34: <input type="text" id="user" name="usuario">, el id debe coincidir con el for.
+- Linea 36: si en input no está dentro del label, tenemos que poner el for: <label for="password">Password</label>
+- Linea 37: <input type="password" id="password" name="password">, si no pones name no se envia el input.
+- Linea 39:  <input type="checkbox" checked name="checker"> Acepto, el tipo esta mal, checker siempre es true y valta el name para que se pueda enviar.
+- Linea 40: <button type="submit" >Enviar</button>, falta el type submit para que el boton envie.
+- Linea 45: <!-- comentario -->, el cierre estaba mal.
+
+- Linea 42: <audio controls src="musica.wav"></audio>, sin controls el usuario no puede reproducirlo.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
