@@ -1,0 +1,112 @@
+### Enunciado
+
+Dado el siguiente código HTML, identifica y explica al menos 10 errores.
+Para cada error indica: Línea o fragmento, Qué está mal, Por qué es incorrecto y Cómo se corrige
+
+1  <!DOCTYPE HTML>
+2  <html LANG="es">
+3    <head>
+4      <meta charset=UTF-8>
+5      <meta name="description">
+6      <title>Página <em>principal</em></title>
+7      <link rel="stylesheet" href="style.css">
+8      <link rel="icon" type="image/x-icon">
+9      <header>
+10       <h1>Mi sitio web</h1>
+11     </header>
+12   </head>
+
+13   <body>
+14     <nav>
+15       <ul>
+16         <li><a href="index.html">Inicio</a>
+17         <li><a href="#Sección">Sección</a></li>
+18       </ul>
+19     </nav>
+
+20     <section id="Sección">
+21       <p>
+22         Bienvenido a mi web
+23         <article>
+24           <p>Artículo de prueba</p>
+25         </article>
+26       </p>
+27     </section>
+
+28     <img src="img/logo.svg">
+
+29     <table>
+30       <caption></caption>
+31       <tr>
+32         <th scope="column">Producto</th>
+33         <th>Precio</th>
+34       </tr>
+35       <tr>
+36         <td>Libro
+37         <td>20€</td>
+38       </tr>
+39     </table>
+
+40     <form method="delete" action="procesar">
+41       <label for="email">Email</label>
+42       <input type="email" id="correo" placeholder="email@ejemplo.com">
+43       <input type="password" name="pass" minlength="abc">
+44       <input type="radio" checked="false"> Acepto
+45       <button type="button">Enviar</button>
+46     </form>
+
+47     <audio src="audio.mp4"></audio>
+48     <br/>
+49     <footer>
+50       <p>&copy Mi web</p>
+51     </footer>
+52   </body>
+53 </html>
+
+
+### Corrección:
+- Linea 9, 10, 11: borrar por que los encabezados van en el body
+- Linea 16: <li><a href="index.html">Inicio</a> </li>, fallta el cierre de al etiqueta.
+- Linea 28: <img src="img/logo.svg" alt="descripcion">, el alt es obligatorio en las imagenes.
+- Linea 36: <td>Libro<td>, falta el cierre
+- Linea 40: <form method="delete" action="procesar">, los unicos metodos permitidos son post y get, delete entonces va a actuar como un get al ser lanzado.
+- Linea 42: <input type="email" id="email" placeholder="email@ejemplo.com">, el id debe coincidir con el for del label al que hace referencia.
+- Linea 44: <input type="radio" checked> Acepto, el checked="false" está mal por que checked es true.
+- Linea 45: <button type="submit">Enviar</button>, el tipo de boton es "submit".
+- Linea 48: <br/>, esta mal por que el salto de linea es un void element y no tiene etiqueta de cierre: <br>
+
+###Errores :
+- Linea 4: <meta charset="UTF-8">, El valor tiene que ir entre comillas
+- Linea 5: <meta name="description" content="Descripción de la página">, falta el content.
+- Linea 6: <title>Página principal</title>, en title solo va texto, no se pueden poner etiquetas dentro.
+- Linea 8: <link rel="icon" type="image/x-icon" href="/favicon.ico">, Falta el href para que funcione.
+- Linea 17: <section id="seccion"> <a href="#seccion">, el id va sin acentos, ni espacios.
+- Lineas 21-26: Un <p> no puede contener elementos de bloque como <article>.
+- Linea 24: <p>Artículo de prueba</p>, dentro de un articulo no se puede poner paragrafos.
+  - En un <article> sí puedes poner <p> sin problema. 
+- Linea 30: <caption></caption> no es una etiqueta de tablas, tienen que escribirse fuera.
+  - <caption> sí es etiqueta de tabla y va dentro de <table> (normalmente al principio).
+  - Es mala practica, pero no un error, que este vacío.
+- Linea 42: <input type="email" id="email" name="email" ...>, falta el name, y sin el, el valor no se envía al servidor.
+- Linea 43: minlength="8", minlength debe ser un numero.
+- Linea 44: <input type="checkbox" name="terms" required>, para “Acepto condiciones” lo correcto es checkbox, no radio.
+- Linea 47: <audio controls src="audio.mp3"></audio>, sin controls el usuario no puede reproducirlo.
+- Linea 50: <p>&copy; Mi web</p>, las entidades deben cerrarse con ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
