@@ -1,0 +1,72 @@
+La plataforma online “FitRate” permite a los usuarios valorar gimnasios y centros deportivos. Cada gimnasio tiene un nombre comercial, una ciudad y una lista de servicios principales. Los usuarios pueden publicar reseñas con puntuación, añadir comentarios adicionales, responder a reseñas de otros usuarios, y editar sus propias reseñas, quedando constancia de las fechas de cada acción.
+La plataforma también permite que una reseña sea ocultada temporalmente por moderación, indicando el motivo y la fecha.
+
+El gimnasio “UrbanFit Plaza”, situado en Barcelona, ofrece los servicios de sala de musculación, clases dirigidas y entrenamiento personal. Durante mayo de 2025 se producen las siguientes interacciones:
+
+El usuario Clara Ibáñez (nombre de usuario cibanez) publica una reseña el 2 de mayo de 2025 a las 07:58, otorgando 4 estrellas. En su texto indica:
+“Buen ambiente y máquinas nuevas, aunque en horas punta hay demasiada gente.”
+
+Dos días después, el 4 de mayo de 2025 a las 19:20, Clara añade un comentario adicional a su propia reseña diciendo:
+“Han ampliado el horario recientemente, lo cual se agradece.”
+
+El usuario Javier Torres (jtorres) responde a la reseña de Clara el 5 de mayo de 2025 a las 09:05 con el comentario:
+“Totalmente cierto, por la tarde es complicado entrenar tranquilo.”
+
+Posteriormente, Clara edita su reseña original el 6 de mayo de 2025 a las 18:10, modificando el texto a:
+“Buen ambiente y máquinas nuevas, pero en horas punta hay demasiada gente y cuesta entrenar.”
+La puntuación permanece sin cambios.
+
+El usuario Luis Moreno (lmoreno) publica una reseña independiente el 12 de mayo de 2025 a las 21:42, con una puntuación de 1,5 estrellas, indicando:
+“El personal es poco atento y las duchas estaban sucias.”
+
+El 15 de mayo de 2025 a las 10:00, esta última reseña es ocultada por moderación debido a “lenguaje inapropiado”, quedando no visible para otros usuarios, aunque sin ser eliminada definitivamente.
+
+La plataforma muestra la puntuación media del gimnasio, calculada automáticamente a partir de las reseñas visibles en cada momento.
+
+{
+  "gimnasio":{"nombre":"UrbanFit Plaza",
+              "ciudad":"Barcelona",
+              "servicios":["sala de musculación", "clases dirigidas", "entrenamiento personal"]
+              },
+  "reseñas":[{"usuario":["Clara Ibáñez", "cibanez"],
+             "estrellas":4,
+             "comentarios": [
+               {"comentario":"Buen ambiente y máquinas nuevas, aunque en horas punta hay demasiada gente.", "fecha":"2025-05-02T07:58"},
+               {"comentario":"Han ampliado el horario recientemente, lo cual se agradece.", "fecha":"2025-05-04T19:20"}
+              ],
+              "respuestas":[
+                {"usuario":["Javier Torres", "jtorres"], 
+                 "fecha":"2021-05-05T09:05", 
+                 "mensaje":"Totalmente cierto, por la tarde es complicado entrenar tranquilo."
+                }
+              ],
+              "edicion":[
+                {"fecha":"2025-05-06T18:10",
+                 "comentario":"Buen ambiente y máquinas nuevas, pero en horas punta hay demasiada gente y cuesta entrenar."
+                }
+               ]
+              },
+              {"usuario":["Luis Moreno", "lmoreno"],
+              "estrellas":1.5,
+              "comentarios": [
+               {"comentario":"El personal es poco atento y las duchas estaban sucias.", "fecha":"2025-05-12T21:42"}
+              ],
+              "estado":{"e":"oculto", "razon":"lenguaje inapropiado", "fecha":"2025-05-15T10:00"}
+              }]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
