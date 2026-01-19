@@ -1,0 +1,97 @@
+### Enunciado
+Dado el siguiente código HTML, detecta y explica al menos 10 errores.
+Para cada error debes indicar: Línea o fragmento, Qué está mal, Por qué es incorrecto, Cómo se corrige
+
+1  <DOCTYPE html>
+2  <html lang=ES>
+3    <head>
+4      <meta charset="UTF8">
+5      <meta name="keywords" content="web, html, examen">
+6      <title>Mi <strong>sitio</strong> web</title>
+7      <link rel="stylesheet" href="css/estilos.css">
+8      <nav>
+9        <ul>
+10         <li><a href="index.html">Inicio</a></li>
+11       </ul>
+12     </nav>
+13   </head>
+
+14   <body>
+15     <h1>Bienvenido</h1>
+16     <section>
+17       <p>
+18         Introducción a la página
+19         <div class="contenido">
+20           <p>Texto principal</p>
+21         </div>
+22       </p>
+23     </section>
+
+24     <img src=imagenes/logo.jpg width="300px">
+
+25     <table>
+26       <tr>
+27         <th scope="row">Producto</th>
+28         <th scope="fila">Precio</th>
+29       </tr>
+30       <tr>
+31         <td>Cuaderno
+32         <td>5</td>
+33       </tr>
+34     </table>
+
+35     <form action="guardar" method="POST">
+36       <label for="nombre">Nombre</label>
+37       <input type="text" id="nombre">
+38
+39       <label>Email</label>
+40       <input type="email" name="email">
+41
+42       <input type="checkbox" checked="false"> Acepto condiciones
+43
+44       <button type="button">Enviar</button>
+45     </form>
+
+46     <video src="video.mov"></video>
+47     <br></br>
+
+48     <!-- comentario ---->
+49   </BODY>
+50 </html>
+
+
+### Correccion:
+- Linea 1: <!DOCTYPE html>, falta la esclamación.
+- Linea 2: <html lang="es"> valor debería ir entre comillas y en minúscula.
+- Linea 4: <meta charset="UTF-8">, falta el guión.
+- Linea 6: <title>Mi sitio web</title>, dentro de un title no se pueden poner otras etiquetas.
+- Líneas 8–12: <nav> dentro de <head>: nav es contenido visible/estructura semántica → va en body, no en head.
+- Lineas 19, 20, 21: <div class="contenido"><p>Texto principal</p></div>, un div no puede contener un parragrafo.
+- Linea 24: <img src=imagenes/logo.jpg width="300" alt="descripcion" >, el width contiene solo números no hay que poner px, y falta alt que es obligatorio.
+- Linea 28: <th scope="col">Precio</th>, en el scope de las tablas solo son validas row y col.
+- Linea 31: <td>Cuaderno</td>, falta la etiqueta de cierre.
+- Linea 37: <input type="text" id="nombre" name="nombre">, sin name, ese campo no se envía al servidor.
+- Linea 39: <label for="email">Email</label>, falta el for.
+- Linea 40: <input type="email" name="email" id="email">, falta el id.
+- Linea 42: <input type="checkbox" name= "check" checked> Acepto condiciones, checked es siempre true, y sin name no se envia.
+- Linea 44: <button type="submit">Enviar</button>, el tipo es submit y no button.
+- Linea 46:  <video controls> <source src="video.mp4" type="video/mp4"> </video>, sin controls el usuario no puede reproducirlo.
+- Line 47: <br>, el br no necesita cierre. 
+- Linea 48: <!-- comentario -->, el cierre está mal
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
