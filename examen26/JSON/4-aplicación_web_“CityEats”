@@ -1,0 +1,37 @@
+Una aplicación web llamada “CityEats” permite a los usuarios registrados descubrir restaurantes y compartir su experiencia mediante reseñas, comentarios y puntuaciones numéricas. Cada reseña queda asociada a un usuario, a un restaurante concreto y a una fecha y hora de publicación. Las puntuaciones se expresan en una escala de 1 a 5 estrellas, permitiéndose valores enteros o con un decimal.
+
+El restaurante “La Taberna del Puerto”, ubicado en Cádiz, categoría cocina mediterránea, cuenta con varias valoraciones publicadas durante el mes de marzo de 2025.
+
+El usuario Laura Martínez, con nombre de usuario lauram, publica una reseña el 12 de marzo de 2025 a las 21:34. En su valoración indica una puntuación de 4,5 estrellas y escribe:
+“Muy buena calidad del pescado y servicio rápido. El precio algo elevado para las raciones.”
+Además, añade un comentario adicional dos días después, el 14 de marzo de 2025 a las 10:12, aclarando:
+“Volví otro día y el trato fue todavía mejor.”
+
+El usuario Daniel Ruiz, nombre de usuario druiz92, publica una reseña distinta sobre el mismo restaurante el 18 de marzo de 2025 a las 14:08, con una puntuación de 3 estrellas. En su texto comenta:
+“La comida está bien, pero el local estaba demasiado lleno y el ruido era molesto.”
+
+Ambos usuarios mantienen sus reseñas visibles y no han sido editadas ni eliminadas. La aplicación muestra la valoración media del restaurante calculada automáticamente a partir de las puntuaciones publicadas.
+
+JSON:
+
+{
+  "restaurante":{ "nombre":"La Taberna del Puerto", 
+                  "ciudad": "Cadiz", 
+                  "categoria": "cocina mediterránea"
+                  },
+  "resenas": [
+    {
+      "usuario":{"username": "lauram", "name":"Laura Martínez"}, 
+      "fecha":["2025-03-12T21:34"],  
+      "comentarios": ["Muy buena calidad del pescado y servicio rápido. El precio algo elevado para las raciones"],
+      "puntuacion": [4.5],
+      "extra": ["2025-03-14T10:12", "Volví otro día y el trato fue todavía mejor."]
+    },
+    {
+      "usuario": {"username": "druiz92", "name": "Daniel Ruiz"},
+       "fecha":["2025-03-18T14:08"],  
+       "comentarios": ["La comida está bien, pero el local estaba demasiado lleno y el ruido era molesto."],
+       "puntuacion": [3]
+    }
+  ]
+}
