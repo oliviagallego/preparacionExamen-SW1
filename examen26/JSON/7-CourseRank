@@ -1,0 +1,48 @@
+La plataforma digital “CourseRank” permite a los estudiantes universitarios valorar asignaturas cursadas en distintas titulaciones. Cada asignatura se identifica por un nombre oficial, un código y el curso académico. Los usuarios pueden publicar reseñas con puntuación numérica, editar su contenido, responder a reseñas de otros usuarios, y denunciar reseñas, quedando registrada la fecha de cada acción y el estado resultante.
+
+La asignatura “Sistemas Web I” (código SW101) correspondiente al curso académico 2024/2025 recibe varias interacciones durante junio de 2025.
+
+El usuario Ana Pérez (nombre de usuario aperez) publica una reseña el 3 de junio de 2025 a las 16:40, otorgando una puntuación de 4 estrellas y escribiendo:
+“Asignatura exigente pero muy práctica. Se aprende bastante.”
+
+El usuario Carlos Vega (cvega) responde a la reseña de Ana el 4 de junio de 2025 a las 09:10 con el comentario:
+“Totalmente de acuerdo, aunque los plazos de entrega son ajustados.”
+
+El 6 de junio de 2025 a las 18:25, Ana edita su reseña, modificando el texto a:
+“Asignatura exigente pero muy práctica. Se aprende bastante, aunque los plazos son ajustados.”
+La puntuación no cambia.
+
+El usuario Lucía Martín (lmartin) publica una reseña independiente el 10 de junio de 2025 a las 22:05, con una puntuación de 2 estrellas, indicando:
+“Los contenidos están bien, pero la organización es confusa.”
+
+El 12 de junio de 2025 a las 11:00, la reseña de Lucía es denunciada por el usuario Pedro Ruiz (pruiz) por “contenido poco constructivo”. Tras revisión, el 13 de junio de 2025 a las 15:30, la reseña pasa a estado visible con advertencia, sin ser eliminada.
+
+La plataforma muestra la puntuación media de la asignatura, calculada automáticamente a partir de las reseñas visibles en cada momento.
+
+{
+  "asignatura":{"nombre":"Sistemas Web I", "codigo":"SW101", "curso":"2024/2025"},
+  "reseñas": [{"usuario":{"nombre":"Ana Pérez", "username":"aperez"},
+               "fecha":"2025-06-03T16:40",
+               "comentario":"Asignatura exigente pero muy práctica. Se aprende bastante.",
+               "puntuacion":4,
+               "respuesta": {"usuario":{"nombre":"Carlos Vega", "username":"cvega"}, 
+                             "fecha":"2025-06-04T09:10",
+                             "comentario":"Totalmente de acuerdo, aunque los plazos de entrega son ajustados"
+                             },
+                "edicion":{"comentario":"Asignatura exigente pero muy práctica. Se aprende bastante, aunque los plazos son ajustados.",
+                           "fecha":"2025-06-06T18:25" 
+                          }
+              },
+              {"usuario":{"nombre":"Lucía Martín", "username":"lmartin"},
+               "fecha":"2025-06-10T22:05",
+               "comentario":"Los contenidos están bien, pero la organización es confusa",
+               "puntuacion":2,
+               "denuncia":{"usuario":{"nombre":"Pedro Ruiz", "username":"pruiz"}, 
+                           "descripcion":"contenido poco constructivo",
+                           "fecha":"2025-06-12T11:00",
+                           "revision":{"fecha":"2025-06-13T15:30", "estado": "visible con advertencia"}
+                          }
+              } 
+            ]
+
+}
