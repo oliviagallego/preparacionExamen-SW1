@@ -4,7 +4,7 @@
 1) *En el login, guarda en sesión el usuario real con username y role.* 
 
 En /routes/login.js:
-
+```
 router.post("/", async (req, res) => {
   const {user, pass}= req.body;
 
@@ -25,10 +25,12 @@ router.post("/", async (req, res) => {
   req.session.error= "Usuario o contraseña incorrectas";
   return res.redirect("/login");
 });
+```
 
 2. *Crea middleware requireAdmin en app.js.*
 
 En app.js:
+```
 function requireAdmin(req, res, next) {
   if (!req.session.user) {
     req.session.error = "Debes iniciar sesión";
@@ -40,21 +42,23 @@ function requireAdmin(req, res, next) {
   }
   return next();
 }
-
+```
 
 3. *Protege /admin para que solo entre role === "ADMIN".*
 
 En admin.js:
+```
 app.use("/admin", checkLogin, requireAdmin, adminRouter);
-
+```
 o dentro de admin.js:
+```
 router.use(requireAdmin);
-
+```
 
 ---
 ### 2) Admin dashboard
 En admin.js:
-
+```
 router.get("/", async (req, res, next) => {
   const users= await database.users.list();
   const stats={ totalUsers= users.length};
@@ -63,12 +67,12 @@ router.get("/", async (req, res, next) => {
     stats,
   });
 })
-
+```
 ---
 ### 3) Tabla de usuarios
 
 En admin_users.ejs:
-
+```
 <%-include("admin")%>
 <h1> <%= title %> </h1>
 <form method="get" action="/admin/user">
@@ -101,9 +105,9 @@ En admin_users.ejs:
 </table>
 
 <%-incluede("footer")%>
-
+```
 en admin.js:
-
+```
 router.get("/users", (req, res) => {
   const q = String(req.query.q || "").trim().toLowerCase();
 
@@ -112,12 +116,12 @@ router.get("/users", (req, res) => {
 
   return res.render("admin_users", { title: "Usuarios", users: filtered, q });
 });
-
+```
 
 ---
 ### 4) Crear usuario
 En admin.js:
-
+```
 routes.get("/users/new", (req,res,next) =>{
   return res.render("admin_user_new", { title:"New admin"})
 });
@@ -140,32 +144,33 @@ routes.post("/users", async (req,res) =>{
   }
   
 }
-
+```
 ---
 ### 5) Socket.IO
 
 * En sockets.js:
-
+```
 socket.on("joinRoom", ({ room }) => {
   socket.join(room);
   socket.emit("joined", { room });
 });
-
+```
 * cuando creas usuario (routes/admin.js), emites a la room admin:
+```
 const { io } = require("../sockets");
 
 // tras crear:
 io().to("admin").emit("userCreated", { username, role: role || "USER" });
-
+```
 * Cliente (admin_socket.js):
-
+```
 const socket = io();
 socket.emit("joinRoom", { room: "admin" });
 
 socket.on("userCreated", (data) => {
   console.log("Nuevo usuario:", data);
 });
-
+```
 
 
 
