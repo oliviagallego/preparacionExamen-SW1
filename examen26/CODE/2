@@ -1,0 +1,385 @@
+# SIMULACRO PRÁCTICO SW1 — “Login + Admin + Roles + Usuarios + Socket”
+
+## Estructura del proyecto (te la dan así)
+
+```
+/bin/www
+/app.js
+/database.js
+/sockets.js
+/routes/login.js
+/routes/admin.js
+/routes/restricted.js
+/views/header.ejs
+/views/footer.ejs
+/views/login.ejs
+/views/restricted.ejs
+/views/admin.ejs
+/views/admin_users.ejs
+/public/javascripts/admin_socket.js
+```
+
+---
+
+# 0) Código base que te dan (con TODOs)
+
+## `/database.js`  (⚠️ OJO: `users.data` ES UN OBJETO)
+
+```js
+// database.js
+const users = {
+  data: {
+    1: { id: 1, username: "admin", pass: "1234", role: "ADMIN" },
+    2: { id: 2, username: "ana", pass: "1111", role: "USER" },
+  },
+  nextId: 3,
+
+  async isLoginRight(username, pass) {
+    const all = Object.values(this.data);
+    return all.some(u => u.username === username && u.pass === pass);
+  },
+
+  async findByUsername(username) {
+    const all = Object.values(this.data);
+    return all.find(u => u.username === username) || null;
+  },
+
+  async list() {
+    return Object.values(this.data);
+  },
+
+  async create({ username, pass, role }) {
+    // TODO (EJERCICIO): no permitir duplicados por username
+    // TODO (EJERCICIO): crear id y guardar en this.data[id]
+  }
+};
+
+module.exports = { users };
+```
+
+---
+
+## `/sockets.js`
+
+```js
+// sockets.js
+let ioInstance = null;
+
+function initSockets(server) {
+  const { Server } = require("socket.io");
+  const io = new Server(server);
+  ioInstance = io;
+
+  io.on("connection", (socket) => {
+    console.log("socket conectado:", socket.id);
+
+    // TODO (EJERCICIO): joinRoom (rooms)
+    // socket.on("joinRoom", ({ room }) => { ... });
+
+    socket.on("disconnect", () => {
+      console.log("socket desconectado:", socket.id);
+    });
+  });
+
+  return io;
+}
+
+function io() {
+  return ioInstance;
+}
+
+module.exports = { initSockets, io };
+```
+
+---
+
+## `/bin/www` (arranque)
+
+```js
+// bin/www
+const http = require("http");
+const app = require("../app");
+const { initSockets } = require("../sockets");
+
+const server = http.createServer(app);
+initSockets(server);
+
+server.listen(3000);
+```
+
+---
+
+## `/app.js`
+
+```js
+const express = require("express");
+const path = require("path");
+const session = require("express-session");
+
+const loginRouter = require("./routes/login");
+const restrictedRouter = require("./routes/restricted");
+const adminRouter = require("./routes/admin");
+
+const app = express();
+
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(session({
+  secret: "secret",
+  resave: false,
+  saveUninitialized: true,
+}));
+
+// Flash middleware (message/error)
+app.use((req, res, next) => {
+  const message = req.session.message;
+  const error = req.session.error;
+  delete req.session.message;
+  delete req.session.error;
+
+  res.locals.message = message || "";
+  res.locals.error = error || "";
+  res.locals.user = req.session.user || null; // global para header.ejs
+
+  next();
+});
+
+// Rutas
+app.use("/login", loginRouter);
+app.use("/restricted", checkLogin, restrictedRouter);
+app.use("/admin", checkLogin, /* TODO: requireAdmin */ adminRouter);
+
+// Logout
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => res.redirect("/login"));
+});
+
+function checkLogin(req, res, next) {
+  if (req.session.user) return next();
+  req.session.error = "Debes iniciar sesión";
+  return res.redirect("/login");
+}
+
+// TODO (EJERCICIO): middleware requireAdmin
+
+module.exports = app;
+```
+
+---
+
+## `/routes/login.js`
+
+```js
+const express = require("express");
+const router = express.Router();
+const database = require("../database");
+
+router.get("/", (req, res) => {
+  res.render("login", { title: "Login" });
+});
+
+router.post("/", async (req, res) => {
+  const { user, pass } = req.body;
+
+  if (!user || !pass) {
+    req.session.error = "Faltan campos";
+    return res.redirect("/login");
+  }
+
+  const ok = await database.users.isLoginRight(user, pass);
+
+  if (!ok) {
+    req.session.error = "Usuario o contraseña incorrectos";
+    return res.redirect("/login");
+  }
+
+  // TODO (EJERCICIO): guardar en session el usuario REAL, incluyendo role
+  // req.session.user = { username: ..., role: ... };
+
+  req.session.message = "Login correcto";
+  return res.redirect("/restricted");
+});
+
+module.exports = router;
+```
+
+---
+
+## `/routes/restricted.js`
+
+```js
+const express = require("express");
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.render("restricted", { title: "Restricted" });
+});
+
+module.exports = router;
+```
+
+---
+
+## `/routes/admin.js`
+
+```js
+const express = require("express");
+const router = express.Router();
+const database = require("../database");
+const { io } = require("../sockets");
+
+// Dashboard
+router.get("/", async (req, res) => {
+  // TODO (EJERCICIO): mostrar total de usuarios y link a /admin/users
+  res.render("admin", { title: "Admin", total: 0 });
+});
+
+// Listar usuarios (tabla) + buscador
+router.get("/users", async (req, res) => {
+  const q = String(req.query.q || "").trim().toLowerCase();
+
+  // TODO (EJERCICIO): users.data es OBJETO => convertir a array
+  // TODO (EJERCICIO): aplicar filtro por username si q existe
+  res.render("admin_users", { title: "Usuarios", users: [], q });
+});
+
+// Form crear
+router.get("/users/new", (req, res) => {
+  res.render("admin_users_new", { title: "Crear usuario" });
+});
+
+// Crear (POST)
+router.post("/users", async (req, res) => {
+  const { username, pass, role } = req.body;
+
+  // TODO (EJERCICIO): validar campos
+  // TODO (EJERCICIO): database.users.create
+  // TODO (EJERCICIO): emitir socket a room admin: io().to("admin").emit("userCreated", {...})
+
+  return res.redirect("/admin/users");
+});
+
+module.exports = router;
+```
+
+---
+
+## Views mínimas (las usan)
+
+### `/views/header.ejs`
+
+```ejs
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+<nav>
+  <a href="/restricted">Restricted</a>
+  <% if (!user) { %>
+    <a href="/login">Login</a>
+  <% } else { %>
+    <a href="/admin">Admin</a>
+    <a href="/logout">Logout</a>
+  <% } %>
+</nav>
+
+<% if (message) { %><div class="ok"><%= message %></div><% } %>
+<% if (error) { %><div class="err"><%= error %></div><% } %>
+```
+
+### `/views/footer.ejs`
+
+```ejs
+</body></html>
+```
+
+### `/views/login.ejs`
+
+```ejs
+<%- include("header", { title }) %>
+<h1>Login</h1>
+<form action="/login" method="post">
+  <input name="user" placeholder="user">
+  <input name="pass" placeholder="pass" type="password">
+  <button>Entrar</button>
+</form>
+<%- include("footer") %>
+```
+
+### `/views/restricted.ejs`
+
+```ejs
+<%- include("header", { title }) %>
+<h1>Zona restringida</h1>
+<p>Usuario: <%= user?.username %> / Rol: <%= user?.role %></p>
+<%- include("footer") %>
+```
+
+---
+
+# ✅ ENUNCIADO (lo que te piden hacer)
+
+## 1) Roles (obligatorio)
+
+1. En el login, guarda en sesión el **usuario real** con `username` y `role`.
+2. Crea middleware `requireAdmin` en `app.js`.
+3. Protege `/admin` para que solo entre `role === "ADMIN"`.
+
+   * Si no lo es, redirige a `/restricted` con `req.session.error = "No tienes permisos"`.
+
+---
+
+## 2) Admin dashboard (obligatorio)
+
+En `/admin`:
+
+* Muestra el **total** de usuarios.
+* Añade un link a `/admin/users`.
+
+---
+
+## 3) Tabla de usuarios (obligatorio + punto clave de clase)
+
+En `/admin/users`:
+
+* Muestra una **tabla HTML** con: `id`, `username`, `role`.
+* Añade buscador con GET: `/admin/users?q=ana`
+* ⚠️ `database.users.data` es un **OBJETO** → conviértelo a array.
+
+---
+
+## 4) Crear usuario (obligatorio)
+
+* GET `/admin/users/new`: formulario con `username`, `pass`, `role`.
+* POST `/admin/users`: valida:
+
+  * username y pass obligatorios
+  * role por defecto `"USER"`
+* En `database.users.create`:
+
+  * no permitir username duplicado
+  * crear id y guardar en objeto
+
+---
+
+## 5) Socket.IO (entra y es muy típico)
+
+* En server: implementa evento `joinRoom` y `socket.join(room)`.
+* En `/public/javascripts/admin_socket.js`: conecta y entra en room `"admin"`.
+* Cuando creas usuario (POST), emite a room `"admin"`:
+
+  * evento `"userCreated"` con `{ username, role }`
+* En el cliente, al recibir `"userCreated"`, muestra un `alert()` o escribe en consola.
+---
+
+# ✅ BONUS (si te da tiempo)
+
+* En `/admin/users` si no hay resultados: “No hay resultados”.
+* Añadir botón “Limpiar” (link a `/admin/users`).
+* En `admin_users.ejs` pon la tabla con `<thead>/<tbody>`.
