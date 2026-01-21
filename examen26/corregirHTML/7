@@ -61,6 +61,7 @@
 CORRECCION:
 - Linea 2: <html lang="es">, los valores van entre comillas.
 - Linea 4: <meta charset="utf-8">,  guión.
+- Linea 5: <meta http-equiv="Content-Type" content="text/html; charset=utf-8">, falta el content.
 - Linea 6: <title>Mi web personal</title>, el titulo solo puede contener texto.
 - Linea 7: <meta name="description" content="description">, falta el content.
 - Linea 9, 10, 11: el footer no puede ir en el head, va en el body.
