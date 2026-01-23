@@ -1,0 +1,106 @@
+## Enunciado
+
+Detecta y explica al menos 10 errores del siguiente código HTML.
+Por cada error indica: Línea o fragmento, Qué está mal, Por qué es incorrecto, Cómo se corrige
+Cada respuesta correcta suma +0,1 y cada incorrecta resta -0,1.
+
+1  <!DOCTYPE html>
+2  <html lang="es">
+3    <head>
+4      <meta charset="utf-8">
+5      <title>Catálogo < Productos ></title>
+6      <meta name="viewport" content="width=device-width initial-scale=1.0">
+7    </head>
+
+8    <body>
+9      <header>
+10       <h1 id="titulo principal">Catálogo</h1>
+11     </header>
+
+12     <nav>
+13       <ul>
+14         <li><a href="#ofertas">Ofertas</a></li>
+15         <li><a href="#Contacto">Contacto</a></li>
+16       </ul>
+17     </nav>
+
+18     <section id="ofertas">
+19       <h2>Ofertas</h2>
+20       <p>Descuentos del 20% y 30%</p>
+21       <a href="#">Ver más</a>
+22     </section>
+
+23     <section id="contacto">
+24       <h2>Contacto</h2>
+25       <form action="/contactar" method="post">
+26         <label for="nombre">Nombre</label>
+27         <input type="text" id="nombre">
+
+28         <label>Email</label>
+29         <input type="email" name="email" required>
+
+30         <label for="mensaje">Mensaje</label>
+31         <textarea id="mensaje" name="mensaje" value="Hola"></textarea>
+
+32         <label for="pais">País</label>
+33         <select id="pais">
+34           <option>España</option>
+35           <option value="it">Italia</option>
+36         </select>
+
+37         <ol>
+38           <li>Condición A</li>
+39         </ol>
+40         <li>Condición B</li>
+
+41         <input type="radio" name="news" checked="false"> Suscribirse
+42         <button type="button">Enviar</button>
+43       </form>
+44     </section>
+
+45     <img src="imagenes/banner.jpg">
+
+46     <hr></hr>
+
+47     <!-- comentario ---->
+48   </body>
+49 </html>
+
+
+
+## CORRECCION:
+- Linea 05: <title>Catálogo &lt; Productos &gt;</title>, caracter especiales mal escritos.
+- Linea 06: content="width=device-width, initial-scale=1.0", falta la coma
+- Linea 10: <h1 id="titulo-principal">Catálogo</h1> el id no puede tener espacios.
+- Linea 15: <a href="#contacto">Contacto</a>, el href tiene que cuincidir con el id de la linea 23.
+- Linea 27: <input type="text" id="nombre" name:"nombre">, le falta el nombre al input.
+- Linea 28: <label for="email">Email</label>, como el label no contiene el input, necesita el for.
+- Linea 29: <input id="email" type="email" name="email" required>, el input necesita un id.
+- Linea 31: <textarea id="mensaje" name="mensaje"></textarea>, textear no contiene value.
+- Linea 33: <select id="pais" name="pais" >, select tiene que tener nombre.
+- Linea 39: </ol>, deberia ir despues de <li>Condición B</li>, por que debe contener toda la lista.
+- Linea 41: <input type="radio" name="news" checked> Suscribirse, checked siempre es true.
+- Linea 42: <button type="submit">Enviar</button>, lo correcto lara enviar es el type submit.
+- Linea 45: <img src="imagenes/banner.jpg" alt="descripcion">, le falta el alt obligatorio.
+- Linea 46: <hr>, un void element no tiene cierre.
+- Linea 47: <!-- comentario -->, la etiqueta de cerrar esta mal.
+
+
+* Un encabezado (h1..h6) puede y debe estar dentro de la sección a la que titula.
+* href="#" es válido. Se usa como placeholder (aunque no es buena práctica si no se controla el comportamiento).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
