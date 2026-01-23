@@ -1,0 +1,36 @@
+## ENUNCIADO
+
+La plataforma **“DormCheck”** permite a estudiantes valorar **residencias universitarias**. Cada residencia tiene nombre, ciudad y servicios. Los usuarios pueden publicar **reseñas** con puntuación **de 1 a 5** (se permiten decimales), dar **“me gusta”** a reseñas de otros, responder con comentarios, y **editar** sus propias reseñas. Si una reseña es denunciada, se registra quién denuncia, el motivo y la fecha. Moderación puede marcar una reseña como **“oculta”** (no visible públicamente) sin borrarla, indicando fecha y causa.
+La residencia **“Residencia Atlas”**, en **Sevilla**, ofrece *lavandería*, *comedor* y *sala de estudio 24h*.
+
+Interacciones registradas:
+
+1. El usuario **Marta Ríos** (username **mrios**) publica una reseña el **2025-09-01 a las 23:18**, con **4,0** puntos:
+   “Buena ubicación y la sala de estudio es genial. El comedor podría mejorar.”
+2. El usuario **Hugo Salas** (**hsalas**) marca **me gusta** a la reseña de Marta el **2025-09-02 a las 08:05**.
+3. El usuario **Noa Beltrán** (**nbeltran**) responde a la reseña de Marta el **2025-09-02 a las 11:40**:
+   “¿El comedor es caro? Estoy pensando apuntarme.”
+4. Marta responde a Noa el **2025-09-02 a las 12:10**:
+   “Precio medio, pero la calidad depende del día.”
+5. Marta edita su reseña el **2025-09-03 a las 19:55**, cambiando el texto a:
+   “Buena ubicación y sala de estudio 24h muy útil. El comedor podría mejorar y a veces hay ruido por la noche.”
+   La puntuación se mantiene.
+6. El usuario **Diego Pardo** (**dpardo**) publica una reseña el **2025-09-04 a las 00:30**, con **1,0** puntos:
+   “Pésima gestión. No lo recomiendo.”
+7. El **2025-09-04 a las 09:00**, la reseña de Diego es **denunciada** por **Marta Ríos** por el motivo: “insultos”. Tras revisión, el **2025-09-04 a las 13:15** moderación la marca como **oculta** por “lenguaje inapropiado”. La reseña no se elimina.
+La app muestra la **puntuación media** calculada automáticamente a partir de las reseñas visibles en cada momento.
+
+
+{
+  "residencia":["Residencia Atlas", "Sevilla", "lavandería, comedor y sala de estudio 24h."],
+  "reseñas":[{"usuario":["Marta Ríos", "mrios"], "fecha":"2025-09-01T23:18", "puntos":4, "comentario":"Buena ubicación y la sala de estudio es genial. El comedor podría mejorar.",
+             "respuestas": [{"usuario":["Hugo Sala", "hsalas"], "megusta":true, "fecha":"2025-09-02T08:05"},
+                            {"usuario":["Noa Beltrán", "nbeltran"], "megusta":false, "fecha":"2025-09-02T11:40", "comentario":"¿El comedor es caro? Estoy pensando apuntarme.", "reply":{"usuario":["Marta Ríos", "mrios"], "fecha":"2025-09-02T12:10", "comentario": "Precio medio, pero la calidad depende del día."}}
+                           ],
+              "edicion":["2025-09-03T19:55", "Buena ubicación y sala de estudio 24h muy útil. El comedor podría mejorar y a veces hay ruido por la noche."]
+              },
+              {"usuario":["Diego Pardo", "dpardo"], "fecha":"2025-09-04T00:30", "puntos":1, "comentario:"Pésima gestión. No lo recomiendo.",
+               "denuncia":{"fecha":"2025-09-04T09:00", "usuario":["Marta Ríos", "mrios"], "motivo":"insultos", "revision":{"fecha":"2025-09--04T13:15", "marca": "oculto", "motivo": "lenguaje inapropiado", "eliminacion":false}}
+              }
+            ]
+}
