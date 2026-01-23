@@ -1,0 +1,109 @@
+## Enunciado
+
+Detecta y explica al menos 10 errores del siguiente HTML.
+Por cada uno: línea, qué está mal, por qué, cómo se corrige.
+
+1  <!DOCTYPE html>
+2  <html lang="es">
+3    <head>
+4      <meta charset="utf-8">
+5      <title>Formulario & Registro</title>
+6      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+7    </head>
+
+8    <body>
+9      <h1>Registro</h1>
+
+10     <a href="C:\Users\Oli\Desktop\guia.pdf" download="guia.pdf">Descargar guía</a>
+11     <a href="https://example.com" target="_blank">Web externa</a>
+12     <a href="#Sección 1">Ir a sección</a>
+
+13     <section id="Sección 1">
+14       <h2>Sección 1</h2>
+15       <p>Texto con símbolos: 5 < 10 y 10 > 5</p>
+16     </section>
+
+17     <form id="form-registro" action="/signup" method="post">
+18       <fieldset>
+19         <legend>
+20           <p>Datos personales</p>
+21         </legend>
+
+22         <label for="email">Email</label>
+23         <input type="email" id="correo" placeholder="mail@ejemplo.com" required>
+
+24         <label for="age">Edad</label>
+25         <input type="number" id="age" min="cero" max="120">
+
+26         <label for="bio">Bio</label>
+27         <textarea id="bio" name="bio" value="Hola"></textarea>
+
+28         <label for="pais">País</label>
+29         <input id="pais" list="paises">
+30         <datalist id="paises">
+31           <option value="España">
+32           <option value="Italia"></option>
+33         </datalist>
+
+34         <ul>
+35           <li>Opción A</li>
+36         </ul>
+37         <li>Opción B</li>
+
+38         <label>
+39           Acepto condiciones
+40         </label>
+41         <input type="checkbox" name="terms" checked="false">
+
+42         <button form="otro-form" type="submit">Enviar</button>
+43       </fieldset>
+44     </form>
+
+45     <hr></hr>
+
+46   </body>
+47  </html>
+
+
+
+
+## CORRECCION:
+- Linea 5: <title>Formulario &amp; Registro</title>, el and es un carracter especial.
+- Linea 10:  <a href="\guia.pdf" download="guia.pdf">Descargar guía</a>, la ruta esta mal.
+- Linea 12: <a href="#Sección1">Ir a sección</a>, el espacio de la etiqueta está mal
+- Linea 13: <section id="Sección1">, el espacio del id.
+- Linea 15: <p>Texto con símbolos: 5 &lt; 10 y 10 &gt; 5</p>, los caracteres especiales no se pueden escribir asi,
+- Linea 19: <legend>Datos personales</legend>, legend debería contener texto/inline, no un bloque como <p>.
+- Linea 23: <input type="email" id="email" placeholder="mail@ejemplo.com" name="email" required>, el id del input tiene que cuincidir con el for del label y le falta el nombre.
+- Linea 25: <input type="number" id="age" min="0" max="120">, el min es un numero.
+- Linea 27: <textarea id="bio" name="bio"></textarea>, textarea no tiene value.
+- Linea 29: <input id="pais" list="paises" name="paises">, el el input tiene que tener un nombre.
+- Linea 36: el cierre </ul>, tiene que estar cuando termine la lista, es decir despues de <li>Opción B</li>.
+- Linea 41: <input type="checkbox" name="terms" checked>, el checked es siempre true, tiene q esta dentro del label en la linea 39.
+- Linea 42: <button form="form-registro" type="submit">Enviar</button>, el from no existia.
+- Linea 45: <hr>, es un void element, no tiene cierres.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
