@@ -1,0 +1,179 @@
+1) RUTA pública: listado de productos
+Crea routes/products.js con: GET /products → renderiza products.ejs con tabla.
+Debe pasar products como array (ojo: data es objeto).
+
+--> routes/products.js
+
+const express= require("express");
+const router= express.Router();
+const database= require("../database");
+
+router.get("/", (req, res, next) =>{
+  const procuctos= Object.value(database.products.data);
+  retrun res.render("/products", {title:"Productos", productos});
+});
+
+module.exports= router;
+
+--> app.js:
+
+const productsRouter = require("./routes/products");
+app.use("/products", productsRouter);
+
+--> products.ejs:
+
+<%-include ("header", <%title%>);
+
+<h1> <%= title %> </h1>
+
+<thead>
+  <tr> 
+  <th> id </th>
+  <th> name </th>
+  <th> price </th>
+  </tr>
+</thead>
+
+<tbody>
+<%if (!products || products.lenght === 0) {%>
+  <tr><td colspan="3"> "No hay datos" </td></tr>
+<% }else { %>
+      <% products.forEach(p => { %>
+        <tr>
+          <td> <%= p.id %> </td>
+          <td> <%= p.name %> </td>
+          <td> <%= p.price %> </td>
+        </tr>
+      <% }) %>
+  <% } %>
+</tbody>
+</table>
+<%- include("footer") %>
+
+---
+2) RUTA restringida: carrito
+Crea routes/cart.js con: GET /cart → renderiza cart.ejs, Solo entra si hay req.session.user (checkLogin).
+Muestra lo que hay en req.session.cart (si no existe, array vacío).
+
+--> En app.js
+
+const express= require("express");
+const router= express.Router();
+const database= require("../database");
+
+const cartRouter = require("./routes/cart");
+
+function checkLogin(req, res, next){
+  if(!req.session.user){
+    req.session.error="Error al login",
+    return res.redirect("/login");
+  }
+  return next();
+}
+
+app.use("/cart", checkLogin, cartRouter);
+
+--> En routes/cart.js:
+
+const express= require("express");
+const router= express.Router();
+const database= require("../database");
+
+router.get("/", (req, res, next) => {
+  const cart= req.session.cart || [];
+  return res.render("/", {title: "Cart", cart});
+}
+
+module.exports= router;
+
+--> En views/cat.ejs
+
+<%- include("header", <%title%>) %>
+
+<% if(!cart || cart.lenght === 0) { %>
+  <p> Carrito </p>
+<% }else{ %>
+    <ul>
+      <% cart.forEach( c => { %>
+        <li> <%= c.name %> - <%= c.price %> </li>
+      <% }) %>
+    </ul>
+<% -include("footer") %>
+
+---
+3) Admin products: tabla + buscador + borrar
+
+En routes/admin.js añade:
+
+A) GET /admin/products
+  Soporta buscador: /admin/products?q=go
+  Filtra por nombre
+  Renderiza admin_products.ejs con { products, q }
+
+router.get("/products", (req, res) =>{
+  const q= String(req.query.q || " ").trim().toLowerCase;
+  const all= Object.values(database.users.data);
+  const finder= q ? all.filter(p => String(p.name).toLowerCase.include(q)) : all;
+  return res.render("admin_products", {title: "Productos", q, finder: productos})
+}
+
+--> admin_products.ejs
+
+<%- include("header", <%title%>) %>
+
+<form method="get" action="/admin/products">
+  <input name="q" value= "<% q || ' ' %>" placeholder="Buscar producto">
+  <button type="submit"> Buscar </button>
+  <a href="/admin/products"> Limpiar </a>
+</form>
+
+<%- include("footer") %>
+
+
+B) POST /admin/products/:id/delete
+  Borra producto por id
+  Pone req.session.message = "Producto eliminado"
+  Redirige a /admin/products
+
+En admin.js:
+
+router.post("/products/:id/delete", (req, res, next) =>{
+  const id= Number(req.params.id);
+
+  const existed = !!database.products.data[id];
+  if (existed) {
+    delete database.products.data[id];
+    req.session.message = "Producto eliminado";
+  } else {
+    req.session.error = "No existe ese producto";
+  }
+
+  return res.redirect("/admin/products");
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
