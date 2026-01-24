@@ -243,6 +243,133 @@ router.post("/products", (req,res) =>{
   return res.redirect("/admin/products");
 });
 ```
+---
+## 5) Socket.IO
+
+### A) Room de admins
+
+window.me es una variable global en el navegador que usamos para guardar “quién soy yo (el usuario logueado)” y que cualquier script pueda leerla.
+client.js
+```
+const socket = io();
+
+socket.on("server:hello", (data) => {
+  console.log("hello:", data);
+});
+
+// A) Si soy admin, me uno a la room "admins"
+if (window.me && window.me.role === "ADMIN") {
+  socket.emit("room:join", "admins");
+}
+
+```
+header.ejs
+```
+<script>
+  window.me = <%- JSON.stringify(me || null) %>;
+</script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/client.js"></script>
+```
+### B) Notificaciones en tiempo real
+admin.js
+```
+const { io } = require("../sockets");
+
+// ... dentro del POST /admin/users/:id/delete (cuando borras OK)
+io().to("admins").emit("admin:notice", {
+  type: "user_deleted",
+  text: `Usuario ${id} eliminado`
+});
+
+// ... dentro del POST /admin/products/:id/delete (cuando borras OK)
+io().to("admins").emit("admin:notice", {
+  type: "product_deleted",
+  text: `Producto ${id} eliminado`
+});
+```
+client.js
+```
+socket.on("admin:notice", (payload) => {
+  console.log("ADMIN NOTICE:", payload);
+
+  const live = document.getElementById("live");
+  if (live) {
+    const p = document.createElement("p");
+    p.textContent = `[${payload.type}] ${payload.text}`;
+    live.prepend(p);
+  }
+});
+
+```
+
+### C) Desconectar sockets del usuario borrado
+
+Aquí hay 2 piezas:
+- que cada socket se meta en su room user:<id> al conectar
+- al borrar: io().to("user:<id>").disconnectSockets(true)
+
+En sockets.js:
+```
+let _io = null;
+
+function initSockets(server) {
+  const { Server } = require("socket.io");
+  const sessionMiddleware = require("./config/session");
+
+  _io = new Server(server);
+
+  // IMPORTANTÍSIMO: enganchar la sesión de Express a socket.request
+  _io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+  });
+
+  _io.on("connection", (socket) => {
+    socket.emit("server:hello", { ok: true });
+
+    // C) Room por usuario (si hay sesión y user.id)
+    const user = socket.request.session?.user;
+    if (user && user.id != null) {
+      socket.join(`user:${user.id}`);
+    }
+
+    socket.on("room:join", (room) => {
+      socket.join(String(room));
+    });
+  });
+}
+
+function io() {
+  if (!_io) throw new Error("Socket.io no inicializado");
+  return _io;
+}
+
+module.exports = { initSockets, io };
+
+```
+En admin.js:
+```
+const { io } = require("../sockets");
+
+// tras borrar usuario id correctamente:
+io().to(`user:${id}`).disconnectSockets(true);
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
