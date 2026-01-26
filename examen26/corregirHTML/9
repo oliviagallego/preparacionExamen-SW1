@@ -1,0 +1,93 @@
+## Enunciado
+
+Analiza el siguiente código HTML y **detecta y explica al menos 10 errores**.
+Por cada error indica:
+
+1. Línea o fragmento
+2. Qué está mal
+3. Por qué es incorrecto
+4. Cómo se corrige
+
+---
+
+## CÓDIGO HTML A CORREGIR
+
+```html
+1  <!DOCTYPE html>
+2  <html lang="es">
+3    <head>
+4      <meta charset="utf-8">
+5      <title>Acceso & Login</title>
+6      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+7    </head>
+
+8    <body>
+9      <h1>Login</h1>
+
+10     <form action="/login" method="POST">
+11       <fieldset>
+12         <legend><h2>Datos de acceso</h2></legend>
+
+13         <input type="text" id="user" placeholder="Usuario">
+14
+15         <label>Password</label>
+16         <input type="password" id="pass">
+17
+18         <input type="email" name="email" required="false">
+19
+20         <label for="remember">Recordarme</label>
+21         <input type="checkbox" id="remember" checked="false">
+22
+23         <input type="submit" value="Entrar">
+24       </fieldset>
+25     </form>
+
+26     <a href="mailto:soporte@miweb.com">Contacto</a>
+27     <a href="tel:600123123">Llamar</a>
+28     <a href="login.html" target="_new">Recargar</a>
+
+29     <img src="img/user.png">
+
+30     <hr></hr>
+
+31     <!-- comentario ---->
+32   </body>
+33 </html>
+```
+
+--- 
+
+CORRECCCION:
+- Linea 5: <title>Acceso &amp; Login</title>, and es un caracter especial
+- Linea 12: <legend><h2>Datos de acceso</h2></legend>, el legend no puede contener un titulo.
+- Linea 13: <input type="text" id="user" placeholder="Usuario" name="user">, si el input no contiene un nombre no se envia.
+- Linea 15: <label for="pass">Password</label>, el label tiene que tener un for si el input no esta dentro de el.
+- Linea 16: <input type="password" id="pass" name="pass">, el input tiene que tener un nombre.
+- Linea 18: <input id="email" type="email" name="email" required>, required es un boolean que siempre es true y falta el id.
+- Linea 21: <input type="checkbox" id="remember" checked name="checked">, checked es siempre true y un input necesita un nombre.
+- Linea 29: <img src="img/user.png" alt="descripcion">, las imagenes tienen alt por obligacion..
+- Linea 29: <hr></hr>, un void element no tienen cierre.
+- Linea 31: <!-- comentario -->, el cierre del comentario estaba mal.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
