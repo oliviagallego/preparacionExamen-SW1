@@ -1,0 +1,55 @@
+
+## ENUNCIADO (EXAMEN)
+
+La aplicación **“ClinicStar”** permite a pacientes valorar **clínicas**. Cada clínica tiene nombre, ciudad y especialidades. Los usuarios pueden publicar **reseñas** con puntuación de **1 a 5** (decimales permitidos), añadir **comentarios** a reseñas (incluyendo respuestas a comentarios), y **editar** sus propias reseñas. Si una reseña o comentario es **reportado**, se registra quién reporta, el motivo y la fecha. Moderación puede **ocultar** contenido sin eliminarlo, y posteriormente **restaurarlo**. La plataforma puede **bloquear** usuarios por abuso indicando fecha y motivo.
+
+La clínica **“SaludNova Centro”**, situada en **Bilbao**, especialidades: *dermatología* y *medicina general*.
+Eventos registrados durante **octubre de 2025**:
+1. El usuario **Irene Soto** (username **isoto**) publica una reseña el **2025-10-02 a las 09:12**, puntuación **4,2**:
+   “Me atendieron rápido y el médico fue muy claro.”
+2. El usuario **Raúl Peña** (**rpena**) comenta esa reseña el **2025-10-02 a las 10:05**:
+   “¿Te hicieron pruebas o solo consulta?”
+3. Irene responde al comentario de Raúl el **2025-10-02 a las 10:20**:
+   “Solo consulta, pero me dieron pautas y seguimiento.”
+4. Irene edita su reseña el **2025-10-05 a las 17:40**, cambiando la puntuación a **3,8** y el texto a:
+   “Me atendieron rápido, pero el seguimiento fue menor de lo esperado.”
+5. El usuario **Sergio Vidal** (**svidal**) publica una reseña el **2025-10-06 a las 22:55**, puntuación **1,0**:
+   “Un desastre, son unos inútiles.”
+6. El **2025-10-07 a las 08:30**, la reseña de Sergio es reportada por **Irene Soto** por “insultos”. Moderación la **oculta** el **2025-10-07 a las 12:00** por “lenguaje inapropiado”.
+7. El **2025-10-09 a las 09:00**, moderación **restaura** la reseña de Sergio tras editarla internamente para cumplir normas, quedando el texto visible como:
+   “El servicio no me gustó. No lo recomiendo.”
+   La puntuación se mantiene.
+8. El **2025-10-10 a las 18:15**, el usuario **svidal** es **bloqueado** por “abuso reiterado” (no se especifica duración).
+La app muestra la puntuación media calculada automáticamente a partir de reseñas visibles en cada momento.
+
+--- 
+
+{
+  "clinica": {"nombe":"SaludNova Centro", "ciudad":"Bilbao", "especialidades":"dermatología y medicina general"},
+  "eventosRegistrados": [
+    {"fecha":"2025-10-02T09:12", "usuario":["Irene Soto", "isoto"],  "puntuacion":4.2, "comentario":"Me atendieron rápido y el médico fue muy claro.",
+     "edicion":{"fecha":"2025-10-05T17:40", "puntuacion":3.8, "comentario":"Me atendieron rápido, pero el seguimiento fue menor de lo esperado."}
+    },
+    {"fecha":"2025-10-02T10:05", "usuario":["Raúl Peña", "rpena"],  "comentario":"¿Te hicieron pruebas o solo consulta?",
+     "respuesta": { "fecha":"2025-10-02T10:20", "usuario":"isoto", "comentario":"Solo consulta, pero me dieron pautas y seguimiento."}
+    },
+    {"fecha":"2025-10-06T22:55", "usuario":["Sergio Vidal", "svidal"], "puntuacion":"1", "comentario":"Un desastre, son unos inútiles.",
+     "denuncia":{"fecha":"2025-10-07T08:30", "usuario":"isoto", "causa":"insultos", "moderacion":{"fecha":"2025-10-07T12:00", "causa":"lenguaje inapropiado", "estado":"oculta"}},
+     "restauracion":{"fecha":"2025-10-09T09:00", "comentarioFinal":"El servicio no me gustó. No lo recomiendo."}
+    } 
+  ],
+  "bloques":["2025-10-10T18:15", ["Sergio Vidal", "svidal"], "abuso reiterado"]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
