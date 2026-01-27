@@ -1,0 +1,104 @@
+## Enunciado
+
+En el siguiente HTML, encuentra y explica **al menos 10 errores**.
+Para cada error: línea, qué está mal, por qué, cómo se corrige.
+
+---
+
+## CÓDIGO HTML A CORREGIR
+
+```html
+1  <!DOCTYPE html>
+2  <html lang="es">
+3    <head>
+4      <meta charset="utf-8">
+5      <title>Ranking & Resultados</title>
+6      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+7      <link rel="icon" type="image/png">
+8    </head>
+
+9    <body>
+10     <h1 id="top" id="inicio">Ranking</h1>
+
+11     <a href="#tabla">Ver tabla</a>
+12     <a href="https://example.com" target="_blank">Externo</a>
+
+13     <p>Top 3: A & B</p>
+
+14     <table id="tabla">
+15       <tr>
+16         <th scope="column">Nombre</th>
+17         <th>Nota</th>
+18       </tr>
+
+19       <caption>Notas finales</caption>
+
+20       <thead>
+21         <tr><td>Alumno</td><td>Calificación</td></tr>
+22       </thead>
+
+23       <tbody>
+24         <tr>
+25           <td>Ana</td>
+26           <td>9</td>
+27         </tr>
+28         <tr>
+29           <td>Luis</td>
+30           <td>10</td>
+31         </tr>
+32       </tbody>
+33     </table>
+
+34     <iframe src="https://example.com"></iframe>
+
+35     <img src="img/podio.png" alt="">
+
+36     <button onclick="enviar()">Enviar</button>
+
+37     <script>
+38       enviar = () => alert("OK")
+39     </script>
+
+40     <ul>
+41       <li>Uno</li>
+42     </ol>
+
+43     <!-- comentario -- --->
+44   </body>
+45 </html>
+```
+
+
+
+CORRECCION:
+- Linea 5: <title>Ranking &amp; Resultados</title>, un caracter especial no se escribe así.
+- Linea 7: <link rel="icon" type="image/png" href="/imagen">, falta el enlace href.
+- Linea 10: <h1 id="top" >Ranking</h1>, no pueden haber dos ids.
+- Linea 13: <p>Top 3: A &amp; B</p>, caracter especial mal escrito.
+- Linea 16: <th scope="col">Nombre</th>, el scope esta mal no puede ser column.
+- Linea 21: <tr><th>Alumno</th><th>Calificación</th></tr>, en el head no van los td, si no los th.
+- Linea 34: <iframe src="https://example.com" title="Sitio de ejemplo"></iframe>, Un <iframe> debería llevar title para lectores de pantalla.
+- Linea 38: const enviar = () => alert("OK"), falta el const.
+- Linea 42: </ul>, la etiqueta de cierre tiene que cordinar con la de apertura.
+- Linea 43: <!-- comentario --> el cierre del comentario esta mal.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
