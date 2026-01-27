@@ -1,0 +1,59 @@
+## ENUNCIADO (EXAMEN – NIVEL ALTO)
+
+La aplicación **“EventBite”** permite a usuarios valorar **eventos gastronómicos** (ferias, catas, pop-ups). Cada evento tiene nombre, ciudad, fecha de inicio y etiquetas. Los usuarios pueden publicar **reseñas con puntuación (0–10, decimales permitidos)**, dejar **comentarios** en reseñas (con respuestas), **editar** sus propias reseñas (registrando fecha y contenido anterior), y los organizadores pueden **responder oficialmente** a una reseña. Moderación puede **ocultar** una reseña indicando fecha y motivo, y posteriormente **restaurarla**. La app muestra una **media dinámica** basada en reseñas visibles (no se proporciona el valor).
+
+Evento: **“Feria StreetFood 2026”**, en **Madrid**, inicio **2026-02-07**, etiquetas: *streetfood*, *veg-friendly*, *music*.
+
+Interacciones registradas:
+
+1. El usuario **Nuria Campos** (username **ncampos**) publica una reseña el **2026-02-07 a las 21:05**, puntuación **8,5**:
+   “Variedad brutal y buen ambiente. Colas largas, pero merece la pena.”
+2. El usuario **Álex Rueda** (**arueda**) comenta esa reseña el **2026-02-07 a las 22:10**:
+   “¿Había opciones sin gluten?”
+3. Nuria responde a Álex el **2026-02-07 a las 22:24**:
+   “Sí, vi al menos dos puestos con opciones sin gluten.”
+4. Nuria edita su reseña el **2026-02-08 a las 10:30**, manteniendo la puntuación, y cambia el texto a:
+   “Variedad brutal y buen ambiente. Colas largas, pero merece la pena. Mejor ir temprano.”
+5. El usuario **Paula Sanz** (**psanz**) publica una reseña el **2026-02-08 a las 00:12**, puntuación **2,0**:
+   “Una estafa, todo carísimo y malísimo.”
+6. El **2026-02-08 a las 09:00**, la reseña de Paula es **reportada** por **Nuria** por “insultos”.
+   Moderación la **oculta** el **2026-02-08 a las 11:15** por “lenguaje ofensivo”.
+7. El **2026-02-08 a las 13:40**, el organizador del evento (cuenta verificada **EventBiteOrg**) publica una **respuesta oficial** a la reseña de Paula (aunque esté oculta) diciendo:
+   “Sentimos tu experiencia. Escríbenos por soporte para revisarlo.”
+8. Tras editar su contenido internamente, moderación **restaura** la reseña de Paula el **2026-02-09 a las 08:00**, quedando el texto visible como:
+   “No me gustó la relación calidad-precio.”
+
+
+
+## CORRECCIÓN:
+
+{
+  "evento":{"nombre":"Feria StreetFood 2026", "ciudad":"Madrid", "fechaInicio":"2026-02-07", "etiquetas":["streetfood", "veg-friendly", "music"]},
+  "integrantes":[ {"usuario":["Nuria Campos", "ncampos"], "fecha":"2026-02-07T21:05", "puntuacion":8.5, "comentarios":"Variedad brutal y buen ambiente. Colas largas, pero merece la pena.",
+                  "respuestas":{"usuario":["Álex Rueda", "arueda"], "fecha":"2026-02-07T22:10", "comentarios":"¿Había opciones sin gluten?", "respuestas": {"usuario":["Nuria Campos", "ncampos"], "fecha":"2026-02-07T22:24", "respuesta": "Sí, vi al menos dos puestos con opciones sin gluten."}}, 
+                  "edicion":{"fecha":"2026-02-08T10:30", "comentario":"Variedad brutal y buen ambiente. Colas largas, pero merece la pena. Mejor ir temprano"}
+                   },
+                   {"usuario":["Paula Sanz", "psanz"], "fecha":"2026-02-08T00:12", "puntuacion":2, "comentarios":"Una estafa, todo carísimo y malísimo.",
+                    "reportado":{"usuario":["Nuria Campos", "ncampos"], "fecha":"2026-02-08T09:00", "causa":"insultos", "moderacion":["oculta", "2026-02-08T11:15", "lenguaje ofensivo"]},
+                    "respuestas":{"usuario":"EventBiteOrg", "fecha":"2026-02-08T13:40", "comentario":"Sentimos tu experiencia. Escríbenos por soporte para revisarlo."},
+                    "restaura":{"fecha":"2026-02-09T08:00", "comentario":"No me gustó la relación calidad-precio."}
+                   }
+                ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
